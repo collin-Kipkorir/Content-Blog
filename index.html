@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tips & How-To Articles</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 text-gray-800">
+<!-- Navbar -->
+<header class="bg-red-600 text-white p-4 sticky top-0 z-50">
+  <div class="container mx-auto flex justify-between items-center">
+    <h1 class="text-2xl font-bold">Hot Today</h1>
+    <nav>
+      <ul class="flex space-x-4">
+        <li><a href="#" class="hover:underline">Home</a></li>
+        <li><a href="#articles" class="hover:underline">Articles</a></li>
+        <li><a href="#about" class="hover:underline">About</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+  <!-- Hero Section -->
+  <section class="text-center py-12 bg-blue-50">
+    <h2 class="text-4xl font-bold">Welcome to Tips & How-To</h2>
+    <p class="mt-4 text-lg">Discover practical guides, step-by-step tutorials, and expert advice.</p>
+  </section>
+
+
+  <!-- Articles Section with Ad Space -->
+  <section id="articles" class="container mx-auto py-12">
+    <h3 class="text-2xl font-semibold mb-6 text-center">Featured Articles</h3>
+    <div class="flex">
+      <!-- Ad Space Left -->
+      <div class="hidden md:block w-1/5">
+        <a href="https://beta.publishers.adsterra.com/referral/EyjsvkL6AR" rel="nofollow"><img alt="banner" src="https://landings-cdn.adsterratech.com/referralBanners/png/600%20x%20250%20px.png" /></a>
+      </div>
+
+      <!-- Articles List -->
+      <div class="w-full md:w-3/5 lg:w-3/5 mx-auto">
+        <div class="grid grid-cols-1 gap-6">
+          <div id="article-list" class="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
+            <!-- Articles will be dynamically inserted here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Ad Space Right (optional) -->
+      <div class="hidden md:block w-1/5">
+        <!-- You can add another ad here if needed -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white p-4 text-center">
+    <p>&copy; 2024 Tips & How-To. All Rights Reserved.</p>
+  </footer>
+  
+  <script src="app.js"></script>
+</body>
+</html>
