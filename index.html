@@ -36,7 +36,7 @@
     <div class="flex">
       <!-- Ad Space Left -->
       <div class="hidden md:block w-1/5">
-        <a href="https://beta.publishers.adsterra.com/referral/EyjsvkL6AR" rel="nofollow"><img alt="banner" src="https://landings-cdn.adsterratech.com/referralBanners/png/600%20x%20250%20px.png" /></a>
+       
       </div>
 
       <!-- Articles List -->
@@ -60,6 +60,78 @@
     <p>&copy; 2024 Tips & How-To. All Rights Reserved.</p>
   </footer>
   
-  <script src="app.js"></script>
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDv6Xp4ZYnF4wuAEvSFOez_Gluus3hrlIE",
+      authDomain: "content-blog-3ba6d.firebaseapp.com",
+      databaseURL: "https://content-blog-3ba6d-default-rtdb.firebaseio.com/",
+      projectId: "content-blog-3ba6d",
+      storageBucket: "content-blog-3ba6d.appspot.com",
+      messagingSenderId: "687597872642",
+      appId: "1:687597872642:web:79d50fb69ed451e020e91b",
+      measurementId: "G-YM6PNBB100"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // Fetch articles from Firebase
+    function fetchArticles() {
+      const articlesRef = ref(database, 'articles');
+      onValue(articlesRef, (snapshot) => {
+        const articles = snapshot.val();
+        const articlesArray = [];
+
+        for (let id in articles) {
+          articlesArray.push({ id, ...articles[id] });
+        }
+
+        displayArticles(articlesArray);
+      });
+    }
+
+    // Render articles
+    function displayArticles(articleList) {
+      const articleContainer = document.getElementById('article-list');
+      articleContainer.innerHTML = articleList.map(article => `
+        <div class="border rounded-lg shadow-lg overflow-hidden bg-white mb-4">
+          ${article.video ? `
+            <div class="video-container">
+              <iframe width="100%" height="240" src="https://www.youtube.com/embed/${getYouTubeID(article.video)}" frameborder="0" allowfullscreen class="h-60"></iframe>
+            </div>
+          ` : article.image ? `
+            <div class="image-container">
+              <img src="${article.image}" alt="${article.title}" class="w-full h-60 object-cover rounded-lg shadow-md">
+            </div>
+          ` : ''}
+
+          <div class="p-4">
+            <h4 class="text-xl font-bold">
+              <a href="#" class="text-blue-600 hover:underline">${article.title}</a>
+            </h4>
+            <p class="text-sm text-gray-500">${article.category}</p>
+            <p class="mt-2 text-gray-700">${article.content}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Function to extract YouTube video ID from URL
+    function getYouTubeID(url) {
+      const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n]{11})/;
+      const matches = url.match(regex);
+      return matches ? matches[1] : null;
+    }
+
+    // Load articles on page load
+    document.addEventListener('DOMContentLoaded', () => fetchArticles());
+  </script>
 </body>
 </html>
