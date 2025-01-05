@@ -41,13 +41,13 @@
   <div class="container mx-auto flex justify-between items-center">
     <div class="flex items-center">
       <img src="images/hot_logo.webp" alt="Hot News Logo" class="h-10 mr-2">
-      <h1 class="text-xl md:text-2xl font-bold">Hot News</h1>
+      <h1 class="text-xl font-bold">Hot News</h1>
     </div>
     <nav>
       <ul class="flex space-x-4">
-        <li><a href="#" class="hover:underline text-sm md:text-base">Home</a></li>
-        <li><a href="#articles" class="hover:underline text-sm md:text-base">Articles</a></li>
-        <li><a href="#about" class="hover:underline text-sm md:text-base">About</a></li>
+        <li><a href="#" class="hover:underline text-sm">Home</a></li>
+        <li><a href="#articles" class="hover:underline text-sm">Articles</a></li>
+        <li><a href="#about" class="hover:underline text-sm">About</a></li>
       </ul>
     </nav>
   </div>
@@ -61,16 +61,22 @@
 
 <!-- Articles Section -->
 <section id="articles" class="container mx-auto py-12">
-  <div class="flex">
-    <div class="hidden md:block w-1/5"></div>
-    <div class="w-full md:w-3/5 lg:w-3/5 mx-auto">
-      <div class="grid grid-cols-1 gap-4">
+  <div class="flex flex-col md:flex-row">
+    <div class="w-full md:w-4/5 lg:w-3/5 mx-auto">
+      <div class="grid grid-cols-1 gap-3">
         <div id="article-list" class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
           <!-- Articles will be dynamically inserted here -->
         </div>
       </div>
     </div>
-    <div class="hidden md:block w-1/5"></div>
+    <div class="w-full md:w-1/5 lg:w-1/5 md:mt-0">
+      <div class="bg-white p-2 rounded-lg shadow-md mb-4">
+        <h3 class="text-lg font-bold bg-red-600 text-white p-2">Trending News</h3>
+        <ul id="trending-news" class="mt-2">
+          <!-- Trending news items will be dynamically inserted here -->
+        </ul>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -173,7 +179,7 @@
           </div>
         ` : article.image ? `
           <div class="image-container">
-            <img src="${article.image}" alt="${article.title}" class="w-full h-60 object-cover rounded-lg shadow-md">
+            <img src="${article.image}" alt="${article.title}" class="w-full h-60 object-cover rounded-lg shadow-md font-text-sm">
           </div>
         ` : ''}
 
@@ -201,25 +207,20 @@
   }
 
   function shareArticle(title, url) {
-    if (navigator.share) {
-        // Use the Web Share API
-        navigator.share({
-            title: title,
-            url: url
-        }).then(() => {
-            console.log('Thanks for sharing!');
-        }).catch((error) => {
-            console.error('Error sharing:', error);
-        });
+    const encodedTitle = encodeURIComponent(title);
+    const encodedUrl = encodeURIComponent(url);
+
+    // Create share links for different social media platforms
+    const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+    const whatsappShareUrl = `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`;
+    const xShareUrl = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
+
+    // Open share links in new windows
+    const shareWindow = window.open(facebookShareUrl, '_blank', 'width=600,height=400');
+    if (shareWindow) {
+        shareWindow.focus();
     } else {
-        // Fallback for browsers that do not support the Web Share API
-        const tempInput = document.createElement('input');
-        tempInput.value = url;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        document.execCommand('copy');
-        document.body.removeChild(tempInput);
-        alert('Link copied to clipboard!'); // Notify the user
+        alert('Please allow popups for this website');
     }
   }
 
