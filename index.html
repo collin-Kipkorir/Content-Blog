@@ -3,16 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hot News - Latest News,Tech,Politics,Business, Tips & How-To Articles</title>
+  <title>Hot News - Latest News, Tech, Politics, Business, Tips & How-To Articles</title>
   <meta name="description" content="Stay updated with the latest news articles, tips, and how-to guides on Hot News. Discover practical advice and expert insights.">
   <meta name="keywords" content="news, articles, tips, how-to, guides, Hot News">
   <meta name="author" content="Your Name">
   <link rel="canonical" href="https://www.yourwebsite.com/">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM6g0g5z5e5e5e5e5e5e5e5e5e5e5e5e5e5e5" crossorigin="anonymous">
 
   <!-- Favicon -->
   <link rel="icon" href="images/hot_logo.webp" type="image/x-icon">
   <link rel="icon" href="images/hot_logo.webp" type="image/png"> <!-- Optional PNG format -->
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="style.css">
@@ -24,20 +26,23 @@
     gtag('config', 'YOUR_GA_TRACKING_ID');
   </script>
 
-  <!-- Font Awesome CDN -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM6g0g5z5e5e5e5e5e5e5e5e5e5e5e5e5e5e5" crossorigin="anonymous">
+  <meta property="og:title" content="Your Article Title" />
+  <meta property="og:description" content="A brief description of your article." />
+  <meta property="og:image" content="URL to your article image" />
+  <meta property="og:url" content="URL to your article" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Your Article Title" />
+  <meta name="twitter:description" content="A brief description of your article." />
+  <meta name="twitter:image" content="URL to your article image" />
 </head>
 <body class="bg-gray-50 text-gray-800">
 <!-- Navbar -->
 <header class="bg-red-600 text-white p-4 sticky top-0 z-50">
   <div class="container mx-auto flex justify-between items-center">
-    <!-- Logo and Title Container -->
     <div class="flex items-center">
-      <!-- Logo -->
-      <img src="images/hot_logo.webp" alt="Hot News Logo" class="h-10 mr-2"> <!-- Adjust the height as needed -->
+      <img src="images/hot_logo.webp" alt="Hot News Logo" class="h-10 mr-2">
       <h1 class="text-xl md:text-2xl font-bold">Hot News</h1>
     </div>
-
     <nav>
       <ul class="flex space-x-4">
         <li><a href="#" class="hover:underline text-sm md:text-base">Home</a></li>
@@ -57,10 +62,7 @@
 <!-- Articles Section -->
 <section id="articles" class="container mx-auto py-12">
   <div class="flex">
-    <!-- Ad Space Left -->
     <div class="hidden md:block w-1/5"></div>
-
-    <!-- Articles List -->
     <div class="w-full md:w-3/5 lg:w-3/5 mx-auto">
       <div class="grid grid-cols-1 gap-4">
         <div id="article-list" class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
@@ -68,8 +70,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Ad Space Right (optional) -->
     <div class="hidden md:block w-1/5"></div>
   </div>
 </section>
@@ -105,7 +105,6 @@
       </div>
     </div>
 
-    <!-- Popular Topics Section -->
     <div class="mb-4">
       <h3 class="text-lg font-bold">Popular Topics</h3>
       <ul class="flex flex-col md:flex-row justify-center space-y-2 md:space-y-0 md:space-x-4 mt-2">
@@ -118,7 +117,6 @@
       </ul>
     </div>
 
-    <!-- Newsletter Signup -->
     <div class="mb-4">
       <h3 class="text-lg font-bold">Subscribe to Our Newsletter</h3>
       <form class="flex justify-center mt-2">
@@ -131,14 +129,11 @@
   </div>
 </footer>
 
-
 <!-- Firebase SDK -->
 <script type="module">
-  // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
   import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
 
-  // Your web app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyDv6Xp4ZYnF4wuAEvSFOez_Gluus3hrlIE",
     authDomain: "content-blog-3ba6d.firebaseapp.com",
@@ -150,11 +145,9 @@
     measurementId: "G-YM6PNBB100"
   };
 
-  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
 
-  // Fetch articles from Firebase
   function fetchArticles() {
     const articlesRef = ref(database, 'articles');
     onValue(articlesRef, (snapshot) => {
@@ -165,18 +158,15 @@
         articlesArray.push({ id, ...articles[id] });
       }
 
-      // Sort articles by timestamp in descending order
       articlesArray.sort((a, b) => b.timestamp - a.timestamp);
-
       displayArticles(articlesArray);
     });
   }
 
-  // Render articles
   function displayArticles(articleList) {
     const articleContainer = document.getElementById('article-list');
     articleContainer.innerHTML = articleList.map(article => `
-      <div class="border rounded-lg shadow-lg overflow-hidden bg-white mb-4">
+      <div class="border rounded-lg shadow-lg overflow-hidden bg-white mb-4 relative">
         ${article.video ? `
           <div class="video-container">
             <iframe width="100%" height="240" src="https://www.youtube.com/embed/${getYouTubeID(article.video)}" frameborder="0" allowfullscreen class="h-60"></iframe>
@@ -188,23 +178,51 @@
         ` : ''}
 
         <div class="p-4">
-          <h4 class="text-lg md:text-xl font-bold">
+          <h4 class="text-xl font-bold">
             <a href="#" class="text-blue-600 hover:underline">${article.title}</a>
           </h4>
           <p class="text-sm text-gray-500">${article.category}</p>
+        </div>
+
+        <!-- Share Icon -->
+        <div class="absolute bottom-4 right-4 bg-white rounded-full p-2 shadow-lg">
+          <a href="javascript:void(0);" onclick="shareArticle('${article.title}', '${window.location.href}')" class="text-gray-600 hover:text-gray-800">
+            <i class="fas fa-share-alt fa-lg"></i>
+          </a>
         </div>
       </div>
     `).join('');
   }
 
-  // Function to extract YouTube video ID from URL
   function getYouTubeID(url) {
     const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n]{11})/;
     const matches = url.match(regex);
     return matches ? matches[1] : null;
   }
 
-  // Load articles on page load
+  function shareArticle(title, url) {
+    if (navigator.share) {
+        // Use the Web Share API
+        navigator.share({
+            title: title,
+            url: url
+        }).then(() => {
+            console.log('Thanks for sharing!');
+        }).catch((error) => {
+            console.error('Error sharing:', error);
+        });
+    } else {
+        // Fallback for browsers that do not support the Web Share API
+        const tempInput = document.createElement('input');
+        tempInput.value = url;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        alert('Link copied to clipboard!'); // Notify the user
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', () => fetchArticles());
 </script>
 </body>
