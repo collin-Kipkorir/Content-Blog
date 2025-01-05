@@ -124,17 +124,32 @@
         // Display articles in the list
         function displayArticles(articleList) {
             const articleListContainer = document.getElementById('articleList');
-            articleListContainer.innerHTML = articleList.map(article => `
-                <div class="article-item">
-                    <h4>${article.title}</h4>
-                    <p><strong>Category:</strong> ${article.category}</p>
-                    <p>${article.content}</p>
-                    <p><strong>Image:</strong> ${article.image || 'N/A'}</p>
-                    <p><strong>Video:</strong> ${article.video || 'N/A'}</p>
-                    <button onclick="editArticle('${article.id}', '${article.title}', '${article.category}', '${article.content}', '${article.image || ''}', '${article.video || ''}')">Edit</button>
-                    <button class="delete-button" onclick="deleteArticle('${article.id}')">Delete</button>
-                </div>
-            `).join('');
+            articleListContainer.innerHTML = articleList.map(article => {
+                // Escape special characters in title and content
+                const title = article.title.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                const content = article.content.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                const category = article.category.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                const image = article.image.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                const video = article.video.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+
+                return `
+                    <div class="article-item">
+                        <h4>${title}</h4>
+                        <p><strong>Category:</strong> ${category}</p>
+                        <p>${content}</p>
+                        <p><strong>Image:</strong> ${image || 'N/A'}</p>
+                        <p><strong>Video:</strong> ${video || 'N/A'}</p>
+                        <button onclick="editArticle('${article.id}', '${title}', '${category}', '${content}', '${image || ''}', '${video || ''}')">Edit</button>
+                        <button class="delete-button" onclick="deleteArticle('${article.id}')">Delete</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Function to create a safe path for Firebase
+        function createSafePath(title) {
+            // Replace invalid characters with a hyphen or remove them
+            return title.replace(/[.#$[\]:]/g, '-').replace(/\s+/g, '-').toLowerCase();
         }
 
         // Add or update article
@@ -148,7 +163,9 @@
             const image = document.getElementById('image').value;
             const video = document.getElementById('video').value;
 
-            const articleRef = ref(database, 'articles/' + (id || title.replace(/\s+/g, '-').toLowerCase()));
+            // Create a safe path for the article
+            const safePath = createSafePath(title);
+            const articleRef = ref(database, 'articles/' + (id || safePath));
 
             set(articleRef, {
                 title: title,
@@ -181,7 +198,7 @@
             const articleRef = ref(database, 'articles/' + id);
             remove(articleRef).then(() => {
                 alert('Article deleted successfully!');
-                fetchArticles(); // Refresh the article list after deletion
+                fetchArticles();
             }).catch((error) => {
                 console.error('Error deleting article: ', error);
             });
