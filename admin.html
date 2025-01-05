@@ -172,7 +172,8 @@
                 category: category,
                 content: content,
                 image: image,
-                video: video
+                video: video,
+                timestamp: Date.now()
             }).then(() => {
                 alert(id ? 'Article updated successfully!' : 'Article added successfully!');
                 document.getElementById('articleForm').reset();
