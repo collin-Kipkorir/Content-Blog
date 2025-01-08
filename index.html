@@ -34,6 +34,59 @@
   <meta name="twitter:title" content="Your Article Title" />
   <meta name="twitter:description" content="A brief description of your article." />
   <meta name="twitter:image" content="URL to your article image" />
+
+  <style>
+    .article-item {
+        border: 1px solid #ccc;
+        padding: 5px;
+        margin: 5px 0;
+        border-radius: 4px;
+        background: white;
+    }
+    .article-item h4 {
+        margin: 0;
+        font-size: 1.1em;
+    }
+    .article-item p {
+        margin: 5px 0;
+    }
+    .article-item .delete-button {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 5px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .article-item .delete-button:hover {
+        background-color: #c82333;
+    }
+    #trending-news {
+        list-style-type: disc; /* Use disc for bullet points */
+        padding-left: 20px; /* Add padding to align bullets */
+        padding-right: 10px;
+    }
+    #trending-news li {
+        padding: 5px 0;
+    }
+    #trending-news a {
+        text-decoration: none; /* Remove underline */
+        color: black; /* Tailwind blue-600 */
+        display: -webkit-box; /* Enable box layout for clamping */
+        -webkit-box-orient: vertical; /* Set orientation to vertical */
+        -webkit-line-clamp: 2; /* Limit to 2 lines */
+        line-clamp: 2; /* Standard property for compatibility */
+        overflow: hidden; /* Hide overflow */
+        text-overflow: ellipsis; /* Add ellipsis for overflow */
+        max-height: 3em; /* Set max height to accommodate 2 lines */
+    }
+    #trending-news a:hover {
+        text-decoration: underline; /* Underline on hover */
+    }
+    #trending-news p {
+        margin: 5px 0;
+    }
+  </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
 <!-- Navbar -->
@@ -54,7 +107,7 @@
 </header>
 
 <!-- Hero Section -->
-<section class="relative text-center py-12 bg-blue-50 bg-cover bg-center" style="background-image: url('videos/bgrvid.gif');">
+<section class="relative text-center py-12 bg-blue-50 bg-cover bg-center" style="background-image: url('assets/videos/bgrvid.gif');">
   <div class="absolute inset-0 bg-black opacity-50"></div> <!-- Overlay for better text visibility -->
   <div class="relative z-10">
     <h2 class="text-3xl md:text-5xl font-bold text-white">Welcome to Hot News</h2>
@@ -62,28 +115,42 @@
     <a href="#articles" class="mt-6 inline-block bg-red-600 text-white py-2 px-4 rounded-lg text-lg hover:bg-red-500 transition duration-300">Explore Articles</a>
   </div>
 </section>
-
 <!-- Articles Section -->
-<section id="articles" class="container mx-auto py-12">
-  <div class="flex flex-col md:flex-row">
-    <div class="w-full md:w-4/5 lg:w-3/5 mx-auto">
-      <div class="grid grid-cols-1 gap-3">
-        <div id="article-list" class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
-          <!-- Articles will be dynamically inserted here -->
+<section id="articles" class="container p-2 mx-auto py-6">
+  
+    <div class="flex flex-col md:flex-row gap-4 justify-center">
+      
+        <!-- Sidebar -->
+        <aside class="hidden md:block w-full md:w-1/5 lg:w-1/5 mx-auto">
+            <div class="bg-white rounded-lg shadow-lg">
+                <h3 class="text-lg font-bold bg-red-600 text-white p-3 rounded-t-lg">LATEST</h3>
+                <ul id="latest-news" class="mt-2 space-y-2 text-gray-700">
+                    <!-- Trending news items will be dynamically inserted here -->
+                </ul>
+            </div>
+        </aside>
+        <!-- Main Articles -->
+        <div class="w-full md:w-3/5 lg:w-3/5 mx-auto">
+            <div class="grid grid-cols-1 gap-4">
+                <h3 class="text-lg font-bold bg-red-600 text-white p-3 rounded-t-lg">LATEST ARTICLES</h3>
+                <div id="article-list" class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
+                    <!-- Articles will be dynamically inserted here -->
+                </div>
+            </div>
         </div>
-      </div>
+        <!-- Sidebar -->
+        <aside class="w-full md:w-1/5 lg:w-1/5 mx-auto">
+            <div class="bg-white rounded-lg shadow-lg">
+                <h3 class="text-lg font-bold bg-red-600 text-white p-3 rounded-t-lg">TRENDING NEWS</h3>
+                <ul id="trending-news" class="mt-1 space-y-2 text-gray-700">
+                    <!-- Trending news items will be dynamically inserted here -->
+                </ul>
+            </div>
+        </aside>
     </div>
-    <div class="w-full md:w-1/5 lg:w-1/5 md:mt-0">
-      <div class="bg-white p-2 rounded-lg shadow-md mb-4">
-        <h3 class="text-lg font-bold bg-red-600 text-white p-2">Trending News</h3>
-        <ul id="trending-news" class="mt-2">
-          <!-- Trending news items will be dynamically inserted here -->
-        </ul>
-      </div>
-    </div>
-  </div>
 </section>
-
+  
+  
 <!-- Footer -->
 <footer class="bg-gray-800 text-white p-6 text-center">
   <div class="container mx-auto">
@@ -158,6 +225,39 @@
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
 
+          // Fetch trending news from Firebase
+    function fetchTrendingNews() {
+        const trendingNewsRef = ref(database, 'trending-news'); // Adjust the path as necessary
+        onValue(trendingNewsRef, (snapshot) => {
+            const trendingNews = snapshot.val();
+            const trendingNewsList = document.getElementById('trending-news');
+            trendingNewsList.innerHTML = ''; // Clear existing items
+
+            if (trendingNews) {
+                for (let id in trendingNews) {
+                    const newsItem = trendingNews[id];
+                    const timestamp = new Date(newsItem.timestamp).toLocaleString(); // Format timestamp
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <div class="border-b pb-1 mb-1">
+                            <a href="${newsItem.url || '#'}" class="font-bold truncate">${newsItem.title}</a>
+                            <p class="text-xs text-gray-500">${timestamp}</p>
+                        </div>
+                    `;
+                    trendingNewsList.appendChild(listItem);
+                }
+            } else {
+                trendingNewsList.innerHTML = '<li>No trending news available.</li>';
+            }
+        }, (error) => {
+            console.error("Error fetching trending news: ", error);
+        });
+    }
+
+    // Load trending news on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchTrendingNews();
+    });
   function fetchArticles() {
     const articlesRef = ref(database, 'articles');
     onValue(articlesRef, (snapshot) => {
@@ -189,13 +289,13 @@
 
         <div class="p-4">
           <h4 class="text-lg md:text-xl font-bold">
-            <a href="#" class="text-blue-600 hover:underline">${article.title}</a>
+            <a href="#" class="text-black hover:underline">${article.title}</a>
           </h4>
           <p class="text-sm text-gray-500">${article.category}</p>
         </div>
 
         <!-- Share Icon -->
-        <div class="absolute bottom-4 right-4 bg-white rounded-full p-2 shadow-lg">
+        <div class="absolute bottom-4 right-4">
           <a href="javascript:void(0);" onclick="shareArticle('${article.title}', '${window.location.href}')" class="text-gray-600 hover:text-gray-800">
             <i class="fas fa-share-alt fa-lg"></i>
           </a>
@@ -226,6 +326,26 @@
     } else {
         alert('Please allow popups for this website');
     }
+  }
+
+  function displayTrendingNews(trendingNewsList) {
+    const trendingNewsListContainer = document.getElementById('trending-news');
+    trendingNewsListContainer.innerHTML = `
+        <h3 class="text-lg font-bold">TRENDING</h3>
+        <ul class="space-y-2">
+            ${trendingNewsList.map(news => {
+                const title = news.title.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                const timestamp = new Date(news.timestamp).toLocaleString(); // Format timestamp
+
+                return `
+                    <li class="border-b pb-2 mb-2">
+                        <a href="${news.url || '#'}" class="font-bold truncate text-blue-600 hover:underline title">${title}</a>
+                        <p class="text-xs text-gray-500">${timestamp}</p>
+                    </li>
+                `;
+            }).join('')}
+        </ul>
+    `;
   }
 
   document.addEventListener('DOMContentLoaded', () => fetchArticles());

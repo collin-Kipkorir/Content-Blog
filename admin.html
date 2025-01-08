@@ -77,6 +77,18 @@
         <!-- Articles will be dynamically inserted here -->
     </div>
 
+    <h1>Manage Trending News</h1>
+    <form id="trendingNewsForm">
+        <input type="hidden" id="trendingNewsId" value="">
+        <input type="text" id="trendingTitle" placeholder="Trending News Title" required>
+        <textarea id="trendingContent" placeholder="Content" required></textarea>
+        <button type="submit">Add Trending News</button>
+    </form>
+
+    <div class="trending-news-list" id="trendingNewsList">
+        <!-- Trending news items will be dynamically inserted here -->
+    </div>
+
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
@@ -205,8 +217,97 @@
             });
         };
 
+        // Fetch trending news from Firebase
+        function fetchTrendingNews() {
+            const trendingNewsRef = ref(database, 'trending-news');
+            onValue(trendingNewsRef, (snapshot) => {
+                const trendingNews = snapshot.val();
+                const trendingNewsArray = [];
+
+                if (trendingNews) {
+                    for (let id in trendingNews) {
+                        trendingNewsArray.push({ id, ...trendingNews[id] });
+                    }
+                }
+
+                displayTrendingNews(trendingNewsArray);
+            }, (error) => {
+                console.error("Error fetching trending news: ", error);
+            });
+        }
+
+        // Display trending news in the list
+        function displayTrendingNews(trendingNewsList) {
+            const trendingNewsListContainer = document.getElementById('trendingNewsList');
+            trendingNewsListContainer.innerHTML = `
+                <h2 class="text-lg font-bold">TRENDING</h2>
+                <ul class="space-y-2">
+                    ${trendingNewsList.map(news => {
+                        const title = news.title.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                        const content = news.content.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                        const timestamp = new Date(news.timestamp).toLocaleString(); // Format timestamp
+
+                        return `
+                            <li class="article-item border p-2 rounded shadow">
+                                <h4 class="font-bold">${title}</h4>
+                                <p class="text-gray-600">${content}</p>
+                                <p class="text-xs text-gray-500">${timestamp}</p>
+                                <button onclick="editTrendingNews('${news.id}', '${title}', '${content}')">Edit</button>
+                                <button class="delete-button" onclick="deleteTrendingNews('${news.id}')">Delete</button>
+                            </li>
+                        `;
+                    }).join('')}
+                </ul>
+            `;
+        }
+
+        // Add or update trending news
+        document.getElementById('trendingNewsForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const id = document.getElementById('trendingNewsId').value;
+            const title = document.getElementById('trendingTitle').value;
+            const content = document.getElementById('trendingContent').value;
+
+            const trendingNewsRef = ref(database, 'trending-news/' + (id || createSafePath(title)));
+
+            set(trendingNewsRef, {
+                title: title,
+                content: content,
+                timestamp: Date.now()
+            }).then(() => {
+                alert(id ? 'Trending news updated successfully!' : 'Trending news added successfully!');
+                document.getElementById('trendingNewsForm').reset();
+                document.getElementById('trendingNewsId').value = '';
+                fetchTrendingNews();
+            }).catch((error) => {
+                console.error('Error saving trending news: ', error);
+            });
+        });
+
+        // Edit trending news
+        window.editTrendingNews = function(id, title, content) {
+            document.getElementById('trendingNewsId').value = id;
+            document.getElementById('trendingTitle').value = title;
+            document.getElementById('trendingContent').value = content;
+        };
+
+        // Delete trending news
+        window.deleteTrendingNews = function(id) {
+            const trendingNewsRef = ref(database, 'trending-news/' + id);
+            remove(trendingNewsRef).then(() => {
+                alert('Trending news deleted successfully!');
+                fetchTrendingNews();
+            }).catch((error) => {
+                console.error('Error deleting trending news: ', error);
+            });
+        };
+
         // Load articles on page load
-        document.addEventListener('DOMContentLoaded', () => fetchArticles());
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchArticles(); // Existing function to fetch articles
+            fetchTrendingNews(); // New function to fetch trending news
+        });
     </script>
 </body>
 </html>
