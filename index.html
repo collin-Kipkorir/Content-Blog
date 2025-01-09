@@ -208,11 +208,9 @@
     <p class="text-sm md:text-base">&copy; 2024 Hot News. All Rights Reserved.</p>
   </div>
 </footer>
-
-<!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
-  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+  import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDv6Xp4ZYnF4wuAEvSFOez_Gluus3hrlIE",
@@ -228,145 +226,89 @@
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
 
-          // Fetch trending news from Firebase
-    function fetchTrendingNews() {
-        const trendingNewsRef = ref(database, 'trending-news'); // Adjust the path as necessary
-        onValue(trendingNewsRef, (snapshot) => {
-            const trendingNews = snapshot.val();
-            const trendingNewsList = document.getElementById('trending-news');
-            trendingNewsList.innerHTML = ''; // Clear existing items
-
-            if (trendingNews) {
-                for (let id in trendingNews) {
-                    const newsItem = trendingNews[id];
-                    const timestamp = new Date(newsItem.timestamp).toLocaleString(); // Format timestamp
-                    const listItem = document.createElement('li');
-                    const image = newsItem.image ? `<img src="${newsItem.image}" alt="${newsItem.title}" class="w-16 h-16 object-cover rounded">` : '';
-                    listItem.innerHTML = `
-                        <div class="border-b pb-1 mb-1 flex items-top">
-                            ${image}
-                            <div class="ml-2 flex-1">
-                                <a href="${newsItem.url || '#'}" class="font-bold">${newsItem.title}</a>
-                                <p class="text-xs text-gray-500">${timestamp}</p>
-                            </div>
-                        </div>
-                    `;
-                    trendingNewsList.appendChild(listItem);
-                }
-            } else {
-                trendingNewsList.innerHTML = '<li>No trending news available.</li>';
-            }
-        }, (error) => {
-            console.error("Error fetching trending news: ", error);
+  function fetchTrendingNews() {
+    const trendingNewsRef = ref(database, 'trending-news');
+    onValue(trendingNewsRef, (snapshot) => {
+      const trendingNews = snapshot.val();
+      const trendingNewsList = document.getElementById('trending-news');
+      trendingNewsList.innerHTML = ''; // Clear existing items
+      if (trendingNews) {
+        Object.keys(trendingNews).forEach((id) => {
+          const news = trendingNews[id];
+          const listItem = document.createElement('li');
+          listItem.innerHTML = `
+            <div class="border-b pb-2 flex">
+              <img src="${news.image}" alt="${news.title}" class="w-16 h-16 object-cover rounded">
+              <div class="ml-2 flex-1">
+                <h4 class="font-bold"><a href="${news.url || '#'}">${news.title}</a></h4>
+                <p class="text-xs text-gray-500">${new Date(news.timestamp).toLocaleString()}</p>
+              </div>
+            </div>`;
+          trendingNewsList.appendChild(listItem);
         });
-    }
+      } else {
+        trendingNewsList.innerHTML = '<li>No trending news available.</li>';
+      }
+    }, console.error);
+  }
 
-    // Load trending news on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchTrendingNews();
-    });
   function fetchArticles() {
     const articlesRef = ref(database, 'articles');
     onValue(articlesRef, (snapshot) => {
       const articles = snapshot.val();
-      const articlesArray = [];
-
-      for (let id in articles) {
-        articlesArray.push({ id, ...articles[id] });
-      }
-
-      articlesArray.sort((a, b) => b.timestamp - a.timestamp);
-      displayArticles(articlesArray);
+      const articlesList = Object.keys(articles || {}).map(id => ({ id, ...articles[id] }));
+      articlesList.sort((a, b) => b.timestamp - a.timestamp);
+      displayArticles(articlesList);
     });
   }
 
   function displayArticles(articleList) {
     const articleContainer = document.getElementById('article-list');
-    articleContainer.innerHTML = articleList.map(article => `
-      <div class="border rounded-lg shadow-lg overflow-hidden bg-white mb-4 relative">
-        ${article.video ? `
-          <div class="video-container">
-            <iframe width="100%" height="240" src="https://www.youtube.com/embed/${getYouTubeID(article.video)}" frameborder="0" allowfullscreen class="h-60"></iframe>
-          </div>
-        ` : article.image ? `
-          <div class="image-container">
-            <img src="${article.image}" alt="${article.title}" class="w-full h-60 object-cover rounded-lg shadow-md font-text-sm">
-          </div>
-        ` : ''}
+    if (!articleContainer) {
+        console.error('Element with id "article-list" not found.');
+        return;
+    }
+    articleContainer.innerHTML = articleList.map(article => {
+        const encodedTitle = encodeURIComponent(article.title || '');
+        const encodedContent = encodeURIComponent(article.content || '');
+        const encodedImage = encodeURIComponent(article.image || '');
+        const encodedVideo = encodeURIComponent(article.video || '');
+        const youTubeID = article.video ? getYouTubeID(article.video) : '';
 
-        <div class="p-4">
-          <h4 class="text-lg md:text-xl font-bold">
-            <a href="#" class="text-black hover:underline">${article.title}</a>
-          </h4>
-          <p class="text-sm text-gray-500">${article.category}</p>
-        </div>
+        return `
+          <div class="border rounded-lg shadow-lg overflow-hidden bg-white p-4 relative">
+            ${youTubeID ? `<iframe class="w-full h-48" src="https://www.youtube.com/embed/${youTubeID}" frameborder="0" allowfullscreen></iframe>` : ''}
+            ${article.image ? `<img src="${article.image}" alt="${article.title || 'Article Image'}" class="w-full h-48 object-cover">` : ''}
+            <h4 class="font-bold text-lg my-2">
+              <a href="reading.html?title=${encodedTitle}&content=${encodedContent}&image=${encodedImage}&video=${encodedVideo}">${article.title}</a>
+            </h4>
+            <p class="text-sm text-gray-600">${article.category || 'Uncategorized'}</p>
+            <div class="absolute top-2 right-2">
+              <a href="#" onclick="shareArticle('${encodedTitle}', location.href)" class="text-gray-600 hover:text-black">
+                <i class="fas fa-share-alt"></i>
+              </a>
+            </div>
+          </div>`;
+    }).join('');
+}
 
-        <!-- Share Icon -->
-        <div class="absolute bottom-4 right-4">
-          <a href="javascript:void(0);" onclick="shareArticle('${article.title}', '${window.location.href}')" class="text-gray-600 hover:text-gray-800">
-            <i class="fas fa-share-alt fa-lg"></i>
-          </a>
-        </div>
-      </div>
-    `).join('');
-  }
 
   function getYouTubeID(url) {
-    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n]{11})/;
-    const matches = url.match(regex);
-    return matches ? matches[1] : null;
+    const match = url.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=))([^?&]+)/);
+    return match ? match[1] : '';
   }
 
   function shareArticle(title, url) {
-    const encodedTitle = encodeURIComponent(title);
-    const encodedUrl = encodeURIComponent(url);
-
-    // Create share links for different social media platforms
-    const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
-    const whatsappShareUrl = `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`;
-    const xShareUrl = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
-
-    // Open share links in new windows
-    const shareWindow = window.open(facebookShareUrl, '_blank', 'width=600,height=400');
-    if (shareWindow) {
-        shareWindow.focus();
-    } else {
-        alert('Please allow popups for this website');
-    }
+    const fbUrl = `https://facebook.com/sharer.php?u=${encodeURIComponent(url)}`;
+    const twitterUrl = `https://twitter.com/share?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
+    window.open(fbUrl, '_blank');
+    window.open(twitterUrl, '_blank');
   }
 
-  // Display trending news in the list
-  function displayTrendingNews(trendingNewsList) {
-    const trendingNewsListContainer = document.getElementById('trendingNewsList');
-    trendingNewsListContainer.innerHTML = `
-        <h2 class="text-lg font-bold">TRENDING</h2>
-        <ul class="space-y-2">
-            ${trendingNewsList.map(news => {
-                const title = news.title.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-                const content = news.content.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-                const image = news.image ? `<img src="${news.image}" alt="${title}" class="w-16 h-16 object-cover rounded">` : '';
-                const timestamp = new Date(news.timestamp).toLocaleString(); // Format timestamp
-
-                console.log('Image URL:', news.image); // Debugging line
-
-                return `
-                    <li class="article-item border p-2 rounded shadow flex items-center">
-                        ${image} <!-- Display image -->
-                        <div class="ml-2 flex-1">
-                            <h4 class="font-bold">${title}</h4>
-                            <p class="text-gray-600">${content}</p>
-                            <p class="text-xs text-gray-500">${timestamp}</p>
-                            <button onclick="editTrendingNews('${news.id}', '${title}', '${content}', '${news.image || ''}')" class="bg-blue-500 text-white p-1 rounded">Edit</button>
-                            <button class="delete-button" onclick="deleteTrendingNews('${news.id}')">Delete</button>
-                        </div>
-                    </li>
-                `;
-            }).join('')}
-        </ul>
-    `;
-  }
-
-  document.addEventListener('DOMContentLoaded', () => fetchArticles());
+  document.addEventListener('DOMContentLoaded', () => {
+    fetchTrendingNews();
+    fetchArticles();
+  });
 </script>
 </body>
 </html>
