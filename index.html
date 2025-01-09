@@ -62,12 +62,12 @@
         background-color: #c82333;
     }
     #trending-news {
-        list-style-type: disc; /* Use disc for bullet points */
-        padding-left: 20px; /* Add padding to align bullets */
+       
+        padding-left: 10px; /* Add padding to align bullets */
         padding-right: 10px;
     }
     #trending-news li {
-        padding: 5px 0;
+        padding: 0 0;
     }
     #trending-news a {
         text-decoration: none; /* Remove underline */
@@ -85,20 +85,6 @@
         -webkit-line-clamp: 2; /* Limit to 2 lines */
         overflow: hidden; /* Hide overflow */
         text-overflow: ellipsis; /* Add ellipsis for overflow */
-    }
-    #trending-news img,
-    #trending-news iframe {
-        width: 64px; /* Set width */
-        height: 64px; /* Set height */
-        object-fit: cover; /* Maintain aspect ratio */
-        border-radius: 8px; /* Optional: rounded corners */
-    }
-    #trendingNewsList img,
-    #trendingNewsList iframe {
-        width: 64px; /* Set width */
-        height: 64px; /* Set height */
-        object-fit: cover; /* Maintain aspect ratio */
-        border-radius: 8px; /* Optional: rounded corners */
     }
   </style>
 </head>
@@ -144,7 +130,7 @@
             </div>
         </aside>
         <!-- Main Articles -->
-        <div class="w-full md:w-3/5 lg:w-3/5 mx-auto">
+        <div class="w-full md:w-4/5 lg:w-4/5 mx-auto">
             <div class="grid grid-cols-1 gap-4">
                 <h3 class="text-lg font-bold bg-red-600 text-white p-3 rounded-t-lg">LATEST ARTICLES</h3>
                 <div id="article-list" class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
@@ -153,7 +139,7 @@
             </div>
         </div>
         <!-- Sidebar -->
-        <aside class="w-full md:w-1/5 lg:w-1/5 mx-auto">
+        <aside class="w-full md:w-2/5 lg:w-2/5 mx-auto">
             <div class="bg-white rounded-lg shadow-lg">
                 <h3 class="text-lg font-bold bg-red-600 text-white p-3 rounded-t-lg">TRENDING NEWS</h3>
                 <ul id="trending-news" class="mt-1 space-y-2 text-gray-700">
@@ -248,31 +234,22 @@
             trendingNewsList.innerHTML = ''; // Clear existing items
 
             if (trendingNews) {
-                // Convert the object to an array and sort by timestamp
-                const sortedNews = Object.keys(trendingNews).map(id => ({
-                    id,
-                    ...trendingNews[id]
-                })).sort((a, b) => b.timestamp - a.timestamp); // Sort in descending order
-
-                // Display sorted news
-                sortedNews.forEach(newsItem => {
+                for (let id in trendingNews) {
+                    const newsItem = trendingNews[id];
                     const timestamp = new Date(newsItem.timestamp).toLocaleString(); // Format timestamp
                     const listItem = document.createElement('li');
+                    const image = newsItem.image ? `<img src="${newsItem.image}" alt="${newsItem.title}" class="w-16 h-16 object-cover rounded">` : '';
                     listItem.innerHTML = `
-                        <div class="border-b pb-1 mb-1 flex items-start">
-                            <div class="mr-2">
-                                <img src="${newsItem.image || 'default-image-url.jpg'}" alt="${newsItem.title}" class="w-16 h-16 object-cover rounded"> <!-- Image -->
-                                <!-- Uncomment below for video -->
-                                <!-- <iframe width="100%" height="100%" src="${newsItem.video}" frameborder="0" allowfullscreen></iframe> -->
-                            </div>
-                            <div>
+                        <div class="border-b pb-1 mb-1 flex items-top">
+                            ${image}
+                            <div class="ml-2 flex-1">
                                 <a href="${newsItem.url || '#'}" class="font-bold">${newsItem.title}</a>
                                 <p class="text-xs text-gray-500">${timestamp}</p>
                             </div>
                         </div>
                     `;
                     trendingNewsList.appendChild(listItem);
-                });
+                }
             } else {
                 trendingNewsList.innerHTML = '<li>No trending news available.</li>';
             }
@@ -355,29 +332,29 @@
     }
   }
 
+  // Display trending news in the list
   function displayTrendingNews(trendingNewsList) {
-    const trendingNewsListContainer = document.getElementById('trending-news');
+    const trendingNewsListContainer = document.getElementById('trendingNewsList');
     trendingNewsListContainer.innerHTML = `
-        <h2 class="text-lg font-bold mb-4">TRENDING</h2>
-        <ul class="space-y-4">
+        <h2 class="text-lg font-bold">TRENDING</h2>
+        <ul class="space-y-2">
             ${trendingNewsList.map(news => {
                 const title = news.title.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
                 const content = news.content.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-                const image = news.image ? `<img src="${news.image}" alt="${title}" class="w-16 h-16 object-cover rounded-lg shadow-md">` : '';
-                const video = news.video ? `<iframe src="${news.video}" class="w-16 h-16 object-cover rounded-lg shadow-md" frameborder="0" allowfullscreen></iframe>` : '';
+                const image = news.image ? `<img src="${news.image}" alt="${title}" class="w-16 h-16 object-cover rounded">` : '';
                 const timestamp = new Date(news.timestamp).toLocaleString(); // Format timestamp
 
+                console.log('Image URL:', news.image); // Debugging line
+
                 return `
-                    <li class="article-item border border-gray-300 p-4 rounded-lg shadow flex items-center bg-white hover:shadow-lg transition-shadow duration-200">
-                        ${image || video} <!-- Display image or video -->
-                        <div class="ml-4 flex-1">
-                            <h4 class="font-bold text-lg text-gray-800">${title}</h4>
+                    <li class="article-item border p-2 rounded shadow flex items-center">
+                        ${image} <!-- Display image -->
+                        <div class="ml-2 flex-1">
+                            <h4 class="font-bold">${title}</h4>
                             <p class="text-gray-600">${content}</p>
                             <p class="text-xs text-gray-500">${timestamp}</p>
-                            <div class="mt-2">
-                                <button onclick="editTrendingNews('${news.id}', '${title}', '${content}', '${news.image || ''}', '${news.video || ''}')" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200">Edit</button>
-                                <button class="delete-button bg-red-500 text-white p-2 rounded hover:bg-red-600 transition duration-200 ml-2" onclick="deleteTrendingNews('${news.id}')">Delete</button>
-                            </div>
+                            <button onclick="editTrendingNews('${news.id}', '${title}', '${content}', '${news.image || ''}')" class="bg-blue-500 text-white p-1 rounded">Edit</button>
+                            <button class="delete-button" onclick="deleteTrendingNews('${news.id}')">Delete</button>
                         </div>
                     </li>
                 `;
