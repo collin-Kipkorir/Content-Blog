@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,32 +9,35 @@
     <script type="module" src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js"></script>
 </head>
+
 <body class="bg-gray-50 text-gray-800 font-sans">
     <header class="bg-red-600 text-white py-4 px-6">
         <h1 class="text-2xl font-bold">Hot News</h1>
     </header>
-    <nav class="text-sm text-gray-800 my-2 px-3">
-        <a href="index.html" class="hover:underline text-red-850">Home</a> &gt;
-        <a href="articles.html" class="hover:underline text-red-400">Articles</a> &gt;
-<span id="breadcrumb-title" class="font-semibold text-gray-500"></span>
 
-    </nav>
-    
+
     <div class="container mx-auto p-3 grid grid-cols-1 md:grid-cols-12 gap-6">
-    <!-- Social Section -->
-<aside class="hidden md:block md:col-span-3 lg:col-span-2">
-    <h3 class="text-lg font-bold mb-2">Social</h3>
-    <ul id=" " class="space-y-3">
-        <!-- Dynamic social items go here -->
-    </ul>
-</aside>
+        <!-- Social Section -->
+        <aside class="hidden md:block md:col-span-3 lg:col-span-2">
+
+            <ul id=" " class="space-y-3">
+                <!-- Dynamic social items go here -->
+            </ul>
+        </aside>
 
 
         <!-- Main Article Section -->
         <div class="md:col-span-9 lg:col-span-7">
+            <nav class="text-sm text-gray-800 my-2 px-3 inline-flex items-center">
+                <a href="index.html" class="hover:underline text-red-850">Home</a> &gt;
+                <a href="articles.html" class="hover:underline text-red-400">Articles</a> &gt;
+                <span id="breadcrumb-title"
+                    class="font-semibold text-gray-500 truncate max-w-xs overflow-hidden"></span>
+            </nav>
+
             <h2 id="article-title" class="text-xl md:text-3xl font-bold mb-6"></h2>
 
-            
+
             <!-- Image will be inserted here -->
             <div id="article-image" class="my-4"></div>
 
@@ -46,12 +50,14 @@
             <ul id="trending-news" class="space-y-3">
                 <!-- Trending news items will be dynamically inserted here -->
             </ul>
-            
+
             <!-- Subscription Form -->
             <h3 class="text-lg font-bold mt-8 mb-4">Subscribe</h3>
             <form id="subscription-form" class="flex flex-col space-y-3">
-                <input type="email" placeholder="Enter your email" class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" required>
-                <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">Subscribe</button>
+                <input type="email" placeholder="Enter your email"
+                    class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" required>
+                <button type="submit"
+                    class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">Subscribe</button>
             </form>
         </aside>
     </div>
@@ -79,35 +85,35 @@
             return urlParams.get(name);
         }
         function loadArticle() {
-    const title = getUrlParameter('title');
-    const content = getUrlParameter('content');
-    const image = getUrlParameter('image');
-    let video = getUrlParameter('video');
+            const title = getUrlParameter('title');
+            const content = getUrlParameter('content');
+            const image = getUrlParameter('image');
+            let video = getUrlParameter('video');
 
-    const titleElement = document.getElementById('article-title');
-    const breadcrumbTitleElement = document.getElementById('breadcrumb-title');
-    const contentElement = document.getElementById('article-content');
+            const titleElement = document.getElementById('article-title');
+            const breadcrumbTitleElement = document.getElementById('breadcrumb-title');
+            const contentElement = document.getElementById('article-content');
 
-    titleElement.innerText = title || 'Article Not Found';
-    breadcrumbTitleElement.innerText = title || 'Article Not Found';
-    contentElement.innerHTML = content || 'Content Not Available';
+            titleElement.innerText = title || 'Article Not Found';
+            breadcrumbTitleElement.innerText = title || 'Article Not Found';
+            contentElement.innerHTML = content || 'Content Not Available';
 
-    // Insert image
-    if (image) {
-        document.getElementById('article-image').innerHTML = `<img src="${image}" alt="${title}" class="w-full h-auto my-4 rounded-lg">`;
-    }
+            // Insert image
+            if (image) {
+                document.getElementById('article-image').innerHTML = `<img src="${image}" alt="${title}" class="w-full h-auto my-4 rounded-lg">`;
+            }
 
-    // Convert YouTube URL for embedding
-    if (video) {
-        if (video.includes("m.youtube.com") || video.includes("youtube.com/watch")) {
-            video = video.replace("m.youtube.com/watch", "www.youtube.com/embed")
-                         .replace("youtube.com/watch?v=", "youtube.com/embed/");
-        }
-        contentElement.innerHTML += `
+            // Convert YouTube URL for embedding
+            if (video) {
+                if (video.includes("m.youtube.com") || video.includes("youtube.com/watch")) {
+                    video = video.replace("m.youtube.com/watch", "www.youtube.com/embed")
+                        .replace("youtube.com/watch?v=", "youtube.com/embed/");
+                }
+                contentElement.innerHTML += `
             <iframe src="${video}" class="w-full h-64 my-4 rounded-lg" frameborder="0" allowfullscreen></iframe>
         `;
-    }
-}
+            }
+        }
 
 
 
@@ -126,14 +132,17 @@
                         const listItem = document.createElement('li');
                         const image = newsItem.image ? `<img src="${newsItem.image}" alt="${newsItem.title}" class="w-16 h-16 object-cover rounded">` : '';
                         listItem.innerHTML = ` 
-                            <div class="border-b pb-2 mb-2 flex items-start">
-                                ${image}
-                                <div class="ml-4 flex-1">
-                                    <a href="${newsItem.url || '#'}" class="font-bold text-red-600 hover:underline">${newsItem.title}</a>
-                                    <p class="text-sm text-gray-500">${timestamp}</p>
-                                </div>
-                            </div>
-                        `;
+    <div class="border-b pb-2 mb-2 flex items-start">
+        ${image}
+        <div class="ml-4 flex-1">
+            <a href="${newsItem.url || '#'}" class="block font-bold text-red-600 hover:underline overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:line-clamp-2">
+                ${newsItem.title}
+            </a>
+            <p class="text-sm text-gray-500">${timestamp}</p>
+        </div>
+    </div>
+`;
+
                         trendingNewsList.appendChild(listItem);
                     }
                 } else {
@@ -149,7 +158,7 @@
             fetchTrendingNews();
         });
 
-        document.getElementById('subscription-form').addEventListener('submit', function(event) {
+        document.getElementById('subscription-form').addEventListener('submit', function (event) {
             event.preventDefault();
             const email = this.querySelector('input[type="email"]').value;
             alert(`Subscribed with email: ${email}`);
@@ -157,4 +166,5 @@
         });
     </script>
 </body>
+
 </html>
