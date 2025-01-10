@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hot News - Latest News, Tech, Politics, Business, Tips & How-To Articles</title>
-  <meta name="description" content="Stay updated with the latest news articles, tips, and how-to guides on Hot News. Discover practical advice and expert insights.">
+  <meta name="description"
+    content="Stay updated with the latest news articles, tips, and how-to guides on Hot News. Discover practical advice and expert insights.">
   <meta name="keywords" content="news, articles, tips, how-to, guides, Hot News">
   <meta name="author" content="Your Name">
   <link rel="canonical" href="https://www.yourwebsite.com/">
@@ -21,7 +23,7 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA_TRACKING_ID"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
     gtag('config', 'YOUR_GA_TRACKING_ID');
   </script>
@@ -37,206 +39,237 @@
 
   <style>
     .article-item {
-        border: 1px solid #ccc;
-        padding: 5px;
-        margin: 5px 0;
-        border-radius: 4px;
-        background: white;
+      border: 1px solid #ccc;
+      padding: 5px;
+      margin: 5px 0;
+      border-radius: 4px;
+      background: white;
     }
+
     .article-item h4 {
-        margin: 0;
-        font-size: 1.1em;
+      margin: 0;
+      font-size: 1.1em;
     }
+
     .article-item p {
-        margin: 5px 0;
+      margin: 5px 0;
     }
+
     .article-item .delete-button {
-        background-color: #dc3545;
-        color: white;
-        border: none;
-        padding: 5px;
-        border-radius: 4px;
-        cursor: pointer;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 5px;
+      border-radius: 4px;
+      cursor: pointer;
     }
+
     .article-item .delete-button:hover {
-        background-color: #c82333;
+      background-color: #c82333;
     }
+
     #trending-news {
-       
-        padding-left: 10px; /* Add padding to align bullets */
-        padding-right: 10px;
+
+      padding-left: 10px;
+      /* Add padding to align bullets */
+      padding-right: 10px;
     }
+
     #trending-news li {
-        padding: 0 0;
+      padding: 0 0;
     }
+
     #trending-news a {
-        text-decoration: none; /* Remove underline */
-        color: black; /* Tailwind blue-600 */
+      text-decoration: none;
+      /* Remove underline */
+      color: black;
+      /* Tailwind blue-600 */
     }
+
     #trending-news a:hover {
-        text-decoration: underline; /* Underline on hover */
+      text-decoration: underline;
+      /* Underline on hover */
     }
+
     #trending-news p {
-        margin: 5px 0;
+      margin: 5px 0;
     }
+
     .line-clamp {
-        display: -webkit-box; /* Enable box layout for clamping */
-        -webkit-box-orient: vertical; /* Set orientation to vertical */
-        -webkit-line-clamp: 2; /* Limit to 2 lines */
-        overflow: hidden; /* Hide overflow */
-        text-overflow: ellipsis; /* Add ellipsis for overflow */
+      display: -webkit-box;
+      /* Enable box layout for clamping */
+      -webkit-box-orient: vertical;
+      /* Set orientation to vertical */
+      -webkit-line-clamp: 2;
+      /* Limit to 2 lines */
+      overflow: hidden;
+      /* Hide overflow */
+      text-overflow: ellipsis;
+      /* Add ellipsis for overflow */
     }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
-<!-- Navbar -->
-<header class="bg-red-600 text-white p-4 sticky top-0 z-50">
-  <div class="container mx-auto flex justify-between items-center">
-    <div class="flex items-center">
-      <img src="images/hot_logo.webp" alt="Hot News Logo" class="h-10 mr-2">
-      <h1 class="text-xl font-bold">Hot News</h1>
-    </div>
-    <nav>
-      <ul class="flex space-x-4">
-        <li><a href="#" class="hover:underline text-sm">Home</a></li>
-        <li><a href="#articles" class="hover:underline text-sm">Articles</a></li>
-        <li><a href="#about" class="hover:underline text-sm">About</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
 
-<!-- Hero Section -->
-<section class="relative text-center py-12 bg-blue-50 bg-cover bg-center" style="background-image: url('assets/videos/bgrvid.gif');">
-  <div class="absolute inset-0 bg-black opacity-50"></div> <!-- Overlay for better text visibility -->
-  <div class="relative z-10">
-    <h2 class="text-3xl md:text-5xl font-bold text-white">Welcome to Hot News</h2>
-    <p class="mt-4 text-lg md:text-xl text-gray-200">Stay updated with the latest tips, how-to guides, and expert advice.</p>
-    <a href="#articles" class="mt-6 inline-block bg-red-600 text-white py-2 px-4 rounded-lg text-lg hover:bg-red-500 transition duration-300">Explore Articles</a>
-  </div>
-</section>
-<!-- Articles Section -->
-<section id="articles" class="container p-2 mx-auto py-6">
-  
-    <div class="flex flex-col md:flex-row gap-4 justify-center">
-      
-        <!-- Sidebar -->
-        <aside class="hidden md:block w-full md:w-1/5 lg:w-1/5 mx-auto">
-            <div class="bg-white rounded-lg shadow-lg">
-                <h3 class="text-lg font-bold bg-red-600 text-white p-3 rounded-t-lg">POPULAR</h3>
-                <ul id="latest-news" class="mt-2 space-y-2 text-gray-700">
-                    <!-- Trending news items will be dynamically inserted here -->
-                </ul>
-            </div>
-            <a href="https://beta.publishers.adsterra.com/referral/EyjsvkL6AR" rel="nofollow"><img alt="banner" src="https://landings-cdn.adsterratech.com/referralBanners/gif/200x200_adsterra_reff.gif" /></a>
-        </aside>
-        <!-- Main Articles -->
-        <div class="w-full md:w-4/5 lg:w-4/5 mx-auto">
-          
-            <div class="grid grid-cols-1 gap-4">
-                <h3 class="text-lg font-bold bg-red-600 text-white p-3 rounded-t-lg">LATEST ARTICLES</h3>
-                <a href="https://beta.publishers.adsterra.com/referral/EyjsvkL6AR" rel="nofollow"><img alt="banner" src="https://landings-cdn.adsterratech.com/referralBanners/gif/720x90_adsterra_reff.gif" /></a>
-                <div id="article-list" class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
-                    <!-- Articles will be dynamically inserted here -->
-                </div>
-            </div>
-        </div>
-        <!-- Sidebar -->
-        <aside class="w-full md:w-2/5 lg:w-2/5 mx-auto">
-            <div class="bg-white rounded-lg shadow-lg">
-                <h3 class="text-lg font-bold bg-red-600 text-white p-3 rounded-t-lg">TRENDING NEWS</h3>
-                <ul id="trending-news" class="mt-1 space-y-2 text-gray-700">
-                    <!-- Trending news items will be dynamically inserted here -->
-                </ul>
-            </div>
-        </aside>
+<body class="bg-gray-50 text-gray-800">
+  <!-- Navbar -->
+  <header class="bg-red-600 text-white p-4 sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center">
+        <img src="images/hot_logo.webp" alt="Hot News Logo" class="h-10 mr-2">
+        <h1 class="text-xl font-bold">Hot News</h1>
+      </div>
+      <nav>
+        <ul class="flex space-x-4">
+          <li><a href="#" class="hover:underline text-sm">Home</a></li>
+          <li><a href="#articles" class="hover:underline text-sm">Articles</a></li>
+          <li><a href="#about" class="hover:underline text-sm">About</a></li>
+        </ul>
+      </nav>
     </div>
-</section>
-  
-  
-<!-- Footer -->
-<footer class="bg-gray-800 text-white p-6 text-center">
-  <div class="container mx-auto">
-    <div class="flex flex-col md:flex-row justify-between items-center mb-4">
-      <div class="mb-4 md:mb-0">
-        <h3 class="text-lg md:text-xl font-bold">Stay Connected</h3>
-        <div class="flex justify-center space-x-6 mt-2">
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="hover:text-gray-400 transition duration-300">
-            <i class="fab fa-facebook-f fa-lg"></i>
-          </a>
-          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter" class="hover:text-gray-400 transition duration-300">
-            <i class="fab fa-twitter fa-lg"></i>
-          </a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="hover:text-gray-400 transition duration-300">
-            <i class="fab fa-instagram fa-lg"></i>
-          </a>
-          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="hover:text-gray-400 transition duration-300">
-            <i class="fab fa-linkedin-in fa-lg"></i>
-          </a>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative text-center py-12 bg-blue-50 bg-cover bg-center"
+    style="background-image: url('assets/videos/bgrvid.gif');">
+    <div class="absolute inset-0 bg-black opacity-50"></div> <!-- Overlay for better text visibility -->
+    <div class="relative z-10">
+      <h2 class="text-3xl md:text-5xl font-bold text-white">Welcome to Hot News</h2>
+      <p class="mt-4 text-lg md:text-xl text-gray-200">Stay updated with the latest tips, how-to guides, and expert
+        advice.</p>
+      <a href="#articles"
+        class="mt-6 inline-block bg-red-600 text-white py-2 px-4 rounded-lg text-lg hover:bg-red-500 transition duration-300">Explore
+        Articles</a>
+    </div>
+  </section>
+  <!-- Articles Section -->
+  <section id="articles" class="container p-2 mx-auto py-3">
+
+    <div class="flex flex-col md:flex-row gap-4 justify-center">
+
+      <!-- Sidebar -->
+      <aside class="hidden md:block w-full md:w-1/5 lg:w-1/5 mx-auto">
+        <div class="bg-white rounded-lg shadow-lg">
+          <h3 class="text-lg font-bold bg-red-600 text-white p-3 rounded-t-lg">POPULAR</h3>
+          <ul id="latest-news" class="mt-2 space-y-2 text-gray-700">
+            <!-- Trending news items will be dynamically inserted here -->
+          </ul>
+        </div>
+        <a href="https://beta.publishers.adsterra.com/referral/EyjsvkL6AR" rel="nofollow"><img alt="banner"
+            src="https://landings-cdn.adsterratech.com/referralBanners/gif/200x200_adsterra_reff.gif" /></a>
+      </aside>
+      <!-- Main Articles -->
+      <div class="w-full md:w-4/5 lg:w-4/5 mx-auto">
+
+        <div class="grid grid-cols-1 gap-4">
+          <h3 class="text-lg font-bold bg-red-600 text-white p-3 rounded-t-lg">LATEST ARTICLES</h3>
+          <!-- <a href="https://beta.publishers.adsterra.com/referral/EyjsvkL6AR" rel="nofollow"><img alt="banner"
+              src="https://landings-cdn.adsterratech.com/referralBanners/gif/720x90_adsterra_reff.gif" /></a> -->
+          <div id="article-list" class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
+            <!-- Articles will be dynamically inserted here -->
+          </div>
         </div>
       </div>
-      <div>
-        <h3 class="text-lg md:text-xl font-bold">Quick Links</h3>
-        <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 mt-2">
-          <li><a href="#" class="hover:text-gray-400 transition duration-300">Privacy Policy</a></li>
-          <li><a href="#" class="hover:text-gray-400 transition duration-300">Terms of Service</a></li>
-          <li><a href="#" class="hover:text-gray-400 transition duration-300">Contact Us</a></li>
+      <!-- Sidebar -->
+      <aside class="w-full md:w-2/5 lg:w-2/5 mx-auto">
+        <div class="bg-white rounded-lg shadow-lg">
+          <h3 class="text-lg font-bold bg-red-600 text-white p-3 rounded-t-lg">TRENDING NEWS</h3>
+          <ul id="trending-news" class="mt-1 space-y-2 text-gray-700">
+            <!-- Trending news items will be dynamically inserted here -->
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white p-6 text-center">
+    <div class="container mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-center mb-4">
+        <div class="mb-4 md:mb-0">
+          <h3 class="text-lg md:text-xl font-bold">Stay Connected</h3>
+          <div class="flex justify-center space-x-6 mt-2">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"
+              class="hover:text-gray-400 transition duration-300">
+              <i class="fab fa-facebook-f fa-lg"></i>
+            </a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter"
+              class="hover:text-gray-400 transition duration-300">
+              <i class="fab fa-twitter fa-lg"></i>
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+              class="hover:text-gray-400 transition duration-300">
+              <i class="fab fa-instagram fa-lg"></i>
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"
+              class="hover:text-gray-400 transition duration-300">
+              <i class="fab fa-linkedin-in fa-lg"></i>
+            </a>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-lg md:text-xl font-bold">Quick Links</h3>
+          <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 mt-2">
+            <li><a href="#" class="hover:text-gray-400 transition duration-300">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-gray-400 transition duration-300">Terms of Service</a></li>
+            <li><a href="#" class="hover:text-gray-400 transition duration-300">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h3 class="text-lg md:text-xl font-bold">Popular Topics</h3>
+        <ul class="flex flex-col md:flex-row justify-center space-y-2 md:space-y-0 md:space-x-4 mt-2">
+          <li><a href="#" class="hover:text-gray-400 transition duration-300">News</a></li>
+          <li><a href="#" class="hover:text-gray-400 transition duration-300">Tips</a></li>
+          <li><a href="#" class="hover:text-gray-400 transition duration-300">Politics</a></li>
+          <li><a href="#" class="hover:text-gray-400 transition duration-300">Business</a></li>
+          <li><a href="#" class="hover:text-gray-400 transition duration-300">Technology</a></li>
+          <li><a href="#" class="hover:text-gray-400 transition duration-300">Health</a></li>
         </ul>
       </div>
+
+      <div class="mb-4">
+        <h3 class="text-lg md:text-xl font-bold">Subscribe to Our Newsletter</h3>
+        <form class="flex justify-center mt-2">
+          <input type="email" placeholder="Enter your email" class="p-2 rounded-l-md border border-gray-300" required>
+          <button type="submit"
+            class="bg-red-600 text-white p-2 rounded-r-md hover:bg-red-500 transition duration-300">Subscribe</button>
+        </form>
+      </div>
+
+      <p class="text-sm md:text-base">&copy; 2024 Hot News. All Rights Reserved.</p>
     </div>
+  </footer>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+    import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
 
-    <div class="mb-4">
-      <h3 class="text-lg md:text-xl font-bold">Popular Topics</h3>
-      <ul class="flex flex-col md:flex-row justify-center space-y-2 md:space-y-0 md:space-x-4 mt-2">
-        <li><a href="#" class="hover:text-gray-400 transition duration-300">News</a></li>
-        <li><a href="#" class="hover:text-gray-400 transition duration-300">Tips</a></li>
-        <li><a href="#" class="hover:text-gray-400 transition duration-300">Politics</a></li>
-        <li><a href="#" class="hover:text-gray-400 transition duration-300">Business</a></li>
-        <li><a href="#" class="hover:text-gray-400 transition duration-300">Technology</a></li>
-        <li><a href="#" class="hover:text-gray-400 transition duration-300">Health</a></li>
-      </ul>
-    </div>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDv6Xp4ZYnF4wuAEvSFOez_Gluus3hrlIE",
+      authDomain: "content-blog-3ba6d.firebaseapp.com",
+      databaseURL: "https://content-blog-3ba6d-default-rtdb.firebaseio.com/",
+      projectId: "content-blog-3ba6d",
+      storageBucket: "content-blog-3ba6d.appspot.com",
+      messagingSenderId: "687597872642",
+      appId: "1:687597872642:web:79d50fb69ed451e020e91b",
+      measurementId: "G-YM6PNBB100"
+    };
 
-    <div class="mb-4">
-      <h3 class="text-lg md:text-xl font-bold">Subscribe to Our Newsletter</h3>
-      <form class="flex justify-center mt-2">
-        <input type="email" placeholder="Enter your email" class="p-2 rounded-l-md border border-gray-300" required>
-        <button type="submit" class="bg-red-600 text-white p-2 rounded-r-md hover:bg-red-500 transition duration-300">Subscribe</button>
-      </form>
-    </div>
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
 
-    <p class="text-sm md:text-base">&copy; 2024 Hot News. All Rights Reserved.</p>
-  </div>
-</footer>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
-  import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyDv6Xp4ZYnF4wuAEvSFOez_Gluus3hrlIE",
-    authDomain: "content-blog-3ba6d.firebaseapp.com",
-    databaseURL: "https://content-blog-3ba6d-default-rtdb.firebaseio.com/",
-    projectId: "content-blog-3ba6d",
-    storageBucket: "content-blog-3ba6d.appspot.com",
-    messagingSenderId: "687597872642",
-    appId: "1:687597872642:web:79d50fb69ed451e020e91b",
-    measurementId: "G-YM6PNBB100"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
-
-  function fetchTrendingNews() {
-    const trendingNewsRef = ref(database, 'trending-news');
-    onValue(trendingNewsRef, (snapshot) => {
-      const trendingNews = snapshot.val();
-      const trendingNewsList = document.getElementById('trending-news');
-      trendingNewsList.innerHTML = ''; // Clear existing items
-      if (trendingNews) {
-        Object.keys(trendingNews).forEach((id) => {
-          const news = trendingNews[id];
-          const listItem = document.createElement('li');
-          listItem.innerHTML = `
+    function fetchTrendingNews() {
+      const trendingNewsRef = ref(database, 'trending-news');
+      onValue(trendingNewsRef, (snapshot) => {
+        const trendingNews = snapshot.val();
+        const trendingNewsList = document.getElementById('trending-news');
+        trendingNewsList.innerHTML = ''; // Clear existing items
+        if (trendingNews) {
+          Object.keys(trendingNews).forEach((id) => {
+            const news = trendingNews[id];
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
             <div class="border-b pb-2 flex">
               <img src="${news.image}" alt="${news.title}" class="w-16 h-16 object-cover rounded">
               <div class="ml-2 flex-1">
@@ -244,71 +277,72 @@
                 <p class="text-xs text-gray-500">${new Date(news.timestamp).toLocaleString()}</p>
               </div>
             </div>`;
-          trendingNewsList.appendChild(listItem);
-        });
-      } else {
-        trendingNewsList.innerHTML = '<li>No trending news available.</li>';
-      }
-    }, console.error);
-  }
-
-  function fetchArticles() {
-    const articlesRef = ref(database, 'articles');
-    onValue(articlesRef, (snapshot) => {
-      const articles = snapshot.val();
-      const articlesList = Object.keys(articles || {}).map(id => ({ id, ...articles[id] }));
-      articlesList.sort((a, b) => b.timestamp - a.timestamp);
-      displayArticles(articlesList);
-    });
-  }
-
-  function displayArticles(articleList) {
-    const articleContainer = document.getElementById('article-list');
-    if (!articleContainer) {
-        console.error('Element with id "article-list" not found.');
-        return;
+            trendingNewsList.appendChild(listItem);
+          });
+        } else {
+          trendingNewsList.innerHTML = '<li>No trending news available.</li>';
+        }
+      }, console.error);
     }
-    articleContainer.innerHTML = articleList.map(article => {
-        const encodedTitle = encodeURIComponent(article.title || '');
-        const encodedContent = encodeURIComponent(article.content || '');
-        const encodedImage = encodeURIComponent(article.image || '');
-        const encodedVideo = encodeURIComponent(article.video || '');
-        const youTubeID = article.video ? getYouTubeID(article.video) : '';
 
-        return `
-          <div class="border rounded-lg shadow-lg overflow-hidden bg-white p-4 relative">
-            ${youTubeID ? `<iframe class="w-full h-48" src="https://www.youtube.com/embed/${youTubeID}" frameborder="0" allowfullscreen></iframe>` : ''}
-            ${article.image ? `<img src="${article.image}" alt="${article.title || 'Article Image'}" class="w-full h-48 object-cover">` : ''}
-            <h4 class="font-bold text-lg my-2">
-              <a href="reading.html?title=${encodedTitle}&content=${encodedContent}&image=${encodedImage}&video=${encodedVideo}">${article.title}</a>
-            </h4>
-            <p class="text-sm text-gray-600">${article.category || 'Uncategorized'}</p>
-            <div class="absolute top-2 right-2">
-              <a href="#" onclick="shareArticle('${encodedTitle}', location.href)" class="text-gray-600 hover:text-black">
-                <i class="fas fa-share-alt"></i>
-              </a>
-            </div>
-          </div>`;
-    }).join('');
+    function fetchArticles() {
+      const articlesRef = ref(database, 'articles');
+      onValue(articlesRef, (snapshot) => {
+        const articles = snapshot.val();
+        const articlesList = Object.keys(articles || {}).map(id => ({ id, ...articles[id] }));
+        articlesList.sort((a, b) => b.timestamp - a.timestamp);
+        displayArticles(articlesList);
+      });
+    }
+
+    function displayArticles(articleList) {
+  const articleContainer = document.getElementById('article-list');
+  if (!articleContainer) {
+    console.error('Element with id "article-list" not found.');
+    return;
+  }
+  articleContainer.innerHTML = articleList.map(article => {
+    const encodedTitle = encodeURIComponent(article.title || '');
+    const encodedContent = encodeURIComponent(article.content || '');
+    const encodedImage = encodeURIComponent(article.image || '');
+    const encodedVideo = encodeURIComponent(article.video || '');
+    const youTubeID = article.video ? getYouTubeID(article.video) : '';
+
+    return `
+      <div class="border rounded-lg shadow-lg overflow-hidden bg-white p-2 relative">
+        ${youTubeID ? `<iframe class="w-full h-48" src="https://www.youtube.com/embed/${youTubeID}" frameborder="0" allowfullscreen></iframe>` : ''}
+        ${article.image ? `<img src="${article.image}" alt="${article.title || 'Article Image'}" class="w-full h-48 object-cover">` : ''}
+        <h4 class="font-bold text-lg my-2">
+          <a href="reading.html?title=${encodedTitle}&content=${encodedContent}&image=${encodedImage}&video=${encodedVideo}" class="hover:underline">${article.title}</a>
+        </h4>
+        <p class="text-sm text-gray-600">${article.category || 'Uncategorized'}</p>
+        <div class="absolute bottom-2 right-2">
+          <a href="#" onclick="shareArticle('${encodedTitle}', location.href)" class="text-gray-600 hover:text-black">
+            <i class="fas fa-share-alt"></i>
+          </a>
+        </div>
+      </div>`;
+  }).join('');
 }
 
 
-  function getYouTubeID(url) {
-    const match = url.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=))([^?&]+)/);
-    return match ? match[1] : '';
-  }
+    function getYouTubeID(url) {
+      const match = url.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=))([^?&]+)/);
+      return match ? match[1] : '';
+    }
 
-  function shareArticle(title, url) {
-    const fbUrl = `https://facebook.com/sharer.php?u=${encodeURIComponent(url)}`;
-    const twitterUrl = `https://twitter.com/share?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
-    window.open(fbUrl, '_blank');
-    window.open(twitterUrl, '_blank');
-  }
+    function shareArticle(title, url) {
+      const fbUrl = `https://facebook.com/sharer.php?u=${encodeURIComponent(url)}`;
+      const twitterUrl = `https://twitter.com/share?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
+      window.open(fbUrl, '_blank');
+      window.open(twitterUrl, '_blank');
+    }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    fetchTrendingNews();
-    fetchArticles();
-  });
-</script>
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchTrendingNews();
+      fetchArticles();
+    });
+  </script>
 </body>
+
 </html>
