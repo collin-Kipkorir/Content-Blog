@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,55 +8,45 @@
     <script type="module" src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js"></script>
 </head>
-
 <body class="bg-gray-50 text-gray-800 font-sans">
+    <!-- Header -->
     <header class="bg-red-600 text-white py-4 px-6">
         <h1 class="text-2xl font-bold">Hot News</h1>
     </header>
 
-
-    <div class="container mx-auto p-3 grid grid-cols-1 md:grid-cols-12 gap-6">
-        <!-- Social Section -->
+    <!-- Main Content -->
+    <div class="container mx-auto p-4 grid grid-cols-1 md:grid-cols-12 gap-6">
+        <!-- Social Section (Hidden on smaller screens) -->
         <aside class="hidden md:block md:col-span-3 lg:col-span-2">
-
-            <ul id=" " class="space-y-3">
-                <!-- Dynamic social items go here -->
+            <ul id="social-links" class="space-y-3">
+                <!-- Social items -->
             </ul>
         </aside>
 
-
         <!-- Main Article Section -->
         <div class="md:col-span-9 lg:col-span-7">
-            <nav class="text-sm text-gray-800 my-2 px-3 inline-flex items-center">
-                <a href="index.html" class="hover:underline text-red-850">Home</a> &gt;
-                <a href="articles.html" class="hover:underline text-red-400">Articles</a> &gt;
-                <span id="breadcrumb-title"
-                    class="font-semibold text-gray-500 truncate max-w-xs overflow-hidden"></span>
+            <nav class="text-sm text-gray-800 mb-4 flex items-center space-x-2">
+                <a href="index.html" class="hover:underline text-red-500">Home</a>
+                <span>&gt;</span>
+                <a href="articles.html" class="hover:underline text-red-500">Articles</a>
+                <span>&gt;</span>
+                <span id="breadcrumb-title" class="font-semibold text-gray-700 truncate max-w-full sm:max-w-xs overflow-hidden inline-block"></span>
             </nav>
 
-            <h2 id="article-title" class="text-xl md:text-3xl font-bold mb-6"></h2>
-
-
-            <!-- Image will be inserted here -->
-            <div id="article-image" class="my-4"></div>
-
-            <div id="article-content" class="space-y-4"></div>
+            <h2 id="article-title" class="text-xl md:text-3xl font-bold mb-4"></h2>
+            <div id="article-image" class="my-4 rounded-lg overflow-hidden"></div>
+            <div id="article-content" class="space-y-4 text-justify leading-relaxed"></div>
         </div>
 
-        <!-- Trending News Section -->
+        <!-- Trending News & Subscription Form -->
         <aside class="md:col-span-12 lg:col-span-3">
-            <h3 class="text-lg font-bold mb-2">Trending News</h3>
-            <ul id="trending-news" class="space-y-3">
-                <!-- Trending news items will be dynamically inserted here -->
-            </ul>
+            <h3 class="text-lg font-bold mb-3">Trending News</h3>
+            <ul id="trending-news" class="space-y-3"></ul>
 
-            <!-- Subscription Form -->
-            <h3 class="text-lg font-bold mt-8 mb-4">Subscribe</h3>
+            <h3 class="text-lg font-bold mt-6 mb-3">Subscribe</h3>
             <form id="subscription-form" class="flex flex-col space-y-3">
-                <input type="email" placeholder="Enter your email"
-                    class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" required>
-                <button type="submit"
-                    class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">Subscribe</button>
+                <input type="email" placeholder="Enter your email" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" required>
+                <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">Subscribe</button>
             </form>
         </aside>
     </div>
@@ -132,17 +121,14 @@
                         const listItem = document.createElement('li');
                         const image = newsItem.image ? `<img src="${newsItem.image}" alt="${newsItem.title}" class="w-16 h-16 object-cover rounded">` : '';
                         listItem.innerHTML = ` 
-    <div class="border-b pb-2 mb-2 flex items-start">
-        ${image}
-        <div class="ml-4 flex-1">
-            <a href="${newsItem.url || '#'}" class="block font-bold text-red-600 hover:underline overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:line-clamp-2">
-                ${newsItem.title}
-            </a>
-            <p class="text-sm text-gray-500">${timestamp}</p>
-        </div>
-    </div>
-`;
-
+                            <div class="border-b pb-2 mb-2 flex items-start">
+                                ${image}
+                                <div class="ml-4 flex-1">
+                                    <a href="${newsItem.url || '#'}" class="font-bold text-red-600 hover:underline ">${newsItem.title}</a>
+                                    <p class="text-sm text-gray-500">${timestamp}</p>
+                                </div>
+                            </div>
+                        `;
                         trendingNewsList.appendChild(listItem);
                     }
                 } else {
