@@ -7,6 +7,10 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script type="module" src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js"></script>
+    <!-- Include Quill.js -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
     <style>
         body {
             background-color: #f9f9f9;
@@ -27,6 +31,13 @@
         .delete-button:hover {
             background-color: #c82333;
         }
+        .social-post iframe {
+    width: 100%; /* Make iframe responsive */
+    max-width: 500px; /* Set a max width */
+    height: auto; /* Maintain aspect ratio */
+    border: none; /* Remove default border */
+}
+
     </style>
 </head>
 <body class="p-6">
@@ -35,15 +46,49 @@
     <!-- Articles Section -->
     <div class="card">
         <h2 class="text-xl font-semibold mb-4">Manage Articles</h2>
-        <form id="articleForm" class="mb-4">
-            <input type="hidden" id="articleId" value="">
-            <input type="text" id="title" placeholder="Title" required class="border p-2 w-full mb-2">
-            <input type="text" id="category" placeholder="Category" required class="border p-2 w-full mb-2">
-            <textarea id="content" placeholder="Content" required class="border p-2 w-full mb-2"></textarea>
-            <input type="text" id="image" placeholder="Image URL (optional)" class="border p-2 w-full mb-2">
-            <input type="text" id="video" placeholder="Video URL (optional)" class="border p-2 w-full mb-2">
-            <button type="submit" class="bg-green-500 text-white p-2 rounded w-full">Add Article</button>
-        </form>
+      <!-- Article Form -->
+<section class="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-10">
+    <h2 class="text-2xl font-semibold mb-5">Create / Edit Article</h2>
+    
+    <form id="articleForm" class="space-y-6">
+        <input type="hidden" id="articleId" value="">
+        
+        <!-- Title and Category Inputs -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <input type="text" id="title" placeholder="Article Title" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="text" id="category" placeholder="Category" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <!-- Quill Editor -->
+        <div id="editor" class="bg-gray-50 border border-gray-300 p-4 rounded-md"></div>
+
+        <!-- Image and Video URL Inputs -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <input type="text" id="image" placeholder="Image URL (optional)" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="text" id="video" placeholder="Video URL (optional)" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600 transition duration-300">Save Article</button>
+    </form>
+</section>
+
+<!-- Preview and Other Buttons -->
+<div class="max-w-3xl mx-auto mt-10 space-y-4">
+    <div class="flex justify-between gap-4">
+        <button id="previewButton" class="w-1/3 bg-yellow-500 text-white py-2 rounded-md hover:bg-yellow-600 transition duration-300">Preview</button>
+        <button id="addReadMoreButton" class="w-1/3 bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition duration-300">Add "Read More"</button>
+        <button id="embedSocialPostButton" class="w-1/3 bg-purple-500 text-white py-2 rounded-md hover:bg-purple-600 transition duration-300">Embed Social Post</button>
+    </div>
+
+    <!-- Preview Container -->
+    <div id="previewContainer" style="display:none;" class="bg-white p-5 rounded-lg border border-gray-300 mt-6">
+        <h3 class="text-xl font-semibold mb-4">Preview</h3>
+        <div id="previewContent" class="prose max-w-full"></div>
+    </div>
+</div>
+
+
         <div class="article-list" id="articleList">
             <!-- Articles will be dynamically inserted here -->
         </div>
@@ -52,24 +97,55 @@
     <!-- Trending News Section -->
     <div class="card">
         <h2 class="text-xl font-semibold mb-4">Manage Trending News</h2>
-        <form id="trendingNewsForm" class="mb-4">
-            <input type="hidden" id="trendingNewsId" value="">
-            <input type="text" id="trendingTitle" placeholder="Trending News Title" required class="border p-2 w-full mb-2">
-            <textarea id="trendingContent" placeholder="Content" required class="border p-2 w-full mb-2"></textarea>
-            <input type="text" id="trendingImage" placeholder="Image URL (optional)" class="border p-2 w-full mb-2">
-            <button type="submit" class="bg-green-500 text-white p-2 rounded w-full">Add Trending News</button>
+        <form id="trendingNewsForm" class="max-w-3xl mx-auto space-y-6 p-6 bg-white rounded-lg shadow-lg border border-gray-200">
+            <!-- Hidden Input for ID -->
+            <input type="hidden" id="trendingNewsId" value="" />
+        
+            <!-- Title Input Field -->
+            <div>
+                <label for="trendingTitle" class="block text-lg font-semibold text-gray-800">Title</label>
+                <input type="text" id="trendingTitle" placeholder="Enter title" required
+                    class="mt-2 w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200" />
+            </div>
+        
+            <!-- Content (Quill Editor) -->
+            <div>
+                <label class="block text-lg font-semibold text-gray-800">Content</label>
+                <div id="trendingEditor" class="mt-2 border border-gray-300 rounded-md p-4 bg-gray-50"></div>
+            </div>
+        
+            <!-- Image URL Input Field -->
+            <div>
+                <label for="trendingImage" class="block text-lg font-semibold text-gray-800">Image URL (optional)</label>
+                <input type="text" id="trendingImage" placeholder="Enter image URL" 
+                    class="mt-2 w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200" />
+            </div>
+        
+            <!-- Submit Button -->
+            <div class="flex justify-center">
+                <button type="submit" 
+                    class="w-full sm:w-1/2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+                    Save Trending News
+                </button>
+            </div>
         </form>
+        
+        
         <div class="trending-news-list" id="trendingNewsList">
             <!-- Trending news items will be dynamically inserted here -->
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/quill/dist/quill.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/quill/dist/quill.snow.css" rel="stylesheet">
+    <script src="admin.js"></script>
+
     <script type="module">
-        // Import the functions you need from the SDKs you need
+        // Import necessary Firebase functions
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
-
-        // Your web app's Firebase configuration
+    
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDv6Xp4ZYnF4wuAEvSFOez_Gluus3hrlIE",
             authDomain: "content-blog-3ba6d.firebaseapp.com",
@@ -80,100 +156,239 @@
             appId: "1:687597872642:web:79d50fb69ed451e020e91b",
             measurementId: "G-YM6PNBB100"
         };
-
+    
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
-
+    
         // Fetch articles from Firebase
         function fetchArticles() {
             const articlesRef = ref(database, 'articles');
             onValue(articlesRef, (snapshot) => {
                 const articles = snapshot.val();
                 const articlesArray = [];
-
+    
                 if (articles) {
                     for (let id in articles) {
                         articlesArray.push({ id, ...articles[id] });
                     }
                 }
-
+    
                 displayArticles(articlesArray);
             }, (error) => {
                 console.error("Error fetching articles: ", error);
             });
         }
-
-        // Display articles in the list
+    
         function displayArticles(articleList) {
-            const articleListContainer = document.getElementById('articleList');
-            articleListContainer.innerHTML = articleList.map(article => {
-                const title = article.title.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-                const content = article.content.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-                const category = article.category.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-                const image = article.image.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-                const video = article.video.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+    const articleListContainer = document.getElementById('articleList');
+    articleListContainer.innerHTML = articleList
+        .map((article) => {
+            const title = article.title.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+            const category = article.category.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+            const content = article.content;
+            const image = article.image || ''; // Already wrapped in a responsive container
+            const video = article.video || ''; // Already wrapped in a responsive container
 
-                return `
-                    <div class="article-item border p-2 mb-2 rounded">
-                        <h4 class="font-bold">${title}</h4>
-                        <p><strong>Category:</strong> ${category}</p>
-                        <p>${content}</p>
-                        <p><strong>Image:</strong> ${image || 'N/A'}</p>
-                        <p><strong>Video:</strong> ${video || 'N/A'}</p>
-                        <button onclick="editArticle('${article.id}', '${title}', '${category}', '${content}', '${image || ''}', '${video || ''}')" class="bg-blue-500 text-white p-1 rounded">Edit</button>
-                        <button class="delete-button" onclick="deleteArticle('${article.id}')">Delete</button>
-                    </div>
-                `;
-            }).join('');
-        }
+            return `
+                <div class="article-item border p-2 mb-2 rounded">
+                    <h4 class="font-bold">${title}</h4>
+                    <p><strong>Category:</strong> ${category}</p>
+                    <p>${content}</p>
+                    ${image}
+                    ${video}
+                    <button onclick="editArticle('${article.id}', '${title}', '${category}', '${content}', '${image}', '${video}')" class="bg-blue-500 text-white p-1 rounded">Edit</button>
+                    <button class="delete-button" onclick="deleteArticle('${article.id}')">Delete</button>
+                </div>
+            `;
+        })
+        .join('');
+}
 
+    
         // Function to create a safe path for Firebase
         function createSafePath(title) {
-            // Replace invalid characters with a hyphen or remove them
             return title.replace(/[.#$[\]:]/g, '-').replace(/\s+/g, '-').toLowerCase();
         }
-
-        // Add or update article
-        document.getElementById('articleForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const id = document.getElementById('articleId').value;
-            const title = document.getElementById('title').value;
-            const category = document.getElementById('category').value;
-            const content = document.getElementById('content').value;
-            const image = document.getElementById('image').value;
-            const video = document.getElementById('video').value;
-
-            const safePath = createSafePath(title);
-            const articleRef = ref(database, 'articles/' + (id || safePath));
-
-            set(articleRef, {
-                title: title,
-                category: category,
-                content: content,
-                image: image,
-                video: video,
-                timestamp: Date.now()
-            }).then(() => {
-                alert(id ? 'Article updated successfully!' : 'Article added successfully!');
-                document.getElementById('articleForm').reset();
-                document.getElementById('articleId').value = '';
-                fetchArticles();
-            }).catch((error) => {
-                console.error('Error saving article: ', error);
-            });
+    
+        // Initialize Quill editor
+        const quill = new Quill('#editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    [{ 'align': [] }],
+                    ['bold', 'italic', 'underline'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    ['link', 'blockquote'],
+                    ['image', 'video'],
+                    ['code-block'],
+                    ['emoji']
+                ],
+                handlers: {
+                    'image': function() {
+                        const imageUrl = prompt('Enter image URL');
+                        if (imageUrl) {
+                            const range = this.quill.getSelection();
+                            this.quill.insertEmbed(range.index, 'image', imageUrl);
+                        }
+                    },
+                    'video': function() {
+                        const videoUrl = prompt('Enter video URL');
+                        if (videoUrl) {
+                            const range = this.quill.getSelection();
+                            this.quill.insertEmbed(range.index, 'video', videoUrl);
+                        }
+                    },
+                    'link': function() {
+                        const linkUrl = prompt('Enter the link URL');
+                        if (linkUrl) {
+                            const range = this.quill.getSelection();
+                            this.quill.format('link', linkUrl);
+                        }
+                    }
+                }
+            }
         });
+    
+      // Add or update article
+document.getElementById('articleForm').addEventListener('submit', function(event) {
+    event.preventDefault();
 
+    const id = document.getElementById('articleId').value;
+    const title = document.getElementById('title').value;
+    const category = document.getElementById('category').value;
+    const content = quill.root.innerHTML;
+
+    let image = document.getElementById('image').value;
+    let video = document.getElementById('video').value;
+
+    // Wrap image and video URLs in responsive containers
+    image = image ? wrapImageInResponsiveContainer(image) : null;
+    video = video ? wrapVideoInResponsiveContainer(video) : null;
+
+    const safePath = createSafePath(title);
+    const articleRef = ref(database, 'articles/' + (id || safePath));
+
+    set(articleRef, {
+        title: title,
+        category: category,
+        content: content,
+        image: image,
+        video: video,
+        timestamp: Date.now(),
+    })
+        .then(() => {
+            alert(id ? 'Article updated successfully!' : 'Article added successfully!');
+            document.getElementById('articleForm').reset();
+            document.getElementById('articleId').value = '';
+            fetchArticles();
+        })
+        .catch((error) => {
+            console.error('Error saving article: ', error);
+        });
+});
+
+// Utility function to wrap an image in a responsive container
+function wrapImageInResponsiveContainer(imageUrl) {
+    return `
+        <div class="relative w-full overflow-hidden pb-[56.25%]"> <!-- 16:9 Aspect Ratio -->
+            <img src="${imageUrl}" alt="Image" class="absolute inset-0 w-full h-full object-cover">
+        </div>
+    `;
+}
+
+// Utility function to wrap a video in a responsive container
+function wrapVideoInResponsiveContainer(videoUrl) {
+    return `
+        <div class="relative w-full overflow-hidden pb-[56.25%]"> <!-- 16:9 Aspect Ratio -->
+            <iframe src="${videoUrl}" class="absolute inset-0 w-full h-full" frameborder="0" allowfullscreen></iframe>
+        </div>
+    `;
+}
+
+    
         // Edit article
         window.editArticle = function(id, title, category, content, image, video) {
             document.getElementById('articleId').value = id;
             document.getElementById('title').value = title;
             document.getElementById('category').value = category;
-            document.getElementById('content').value = content;
+            quill.root.innerHTML = content;
             document.getElementById('image').value = image;
             document.getElementById('video').value = video;
         };
+    
+        // Delete article
+        window.deleteArticle = function(id) {
+            const articleRef = ref(database, 'articles/' + id);
+            remove(articleRef).then(() => {
+                alert('Article deleted successfully!');
+                fetchArticles();
+            }).catch((error) => {
+                console.error('Error deleting article: ', error);
+            });
+        };
+    // Add "Read More" functionality
+document.getElementById('addReadMoreButton').addEventListener('click', () => {
+    const readMoreHTML = `<p class="read-more">[Read More]</p>`;
+    const cursorPosition = quill.getSelection(); // Get the current cursor position
+    quill.clipboard.dangerouslyPasteHTML(cursorPosition.index, readMoreHTML); // Insert the Read More break
+    alert('Read More break added!');
+});
+document.getElementById('embedSocialPostButton').addEventListener('click', () => {
+    const embedCode = prompt('Paste the embed code (e.g., iframe) for the social post:');
+
+    if (embedCode && isValidEmbedCode(embedCode)) {
+        // Wrap embed code in a responsive container
+        const responsiveEmbedCode = wrapEmbedInResponsiveContainer(embedCode);
+
+        // Insert responsive embed code into the editor
+        const cursorPosition = quill.getSelection(); // Get the current cursor position
+        quill.clipboard.dangerouslyPasteHTML(cursorPosition.index, responsiveEmbedCode); // Insert wrapped HTML
+        alert('Social post embedded!');
+    } else {
+        alert('Invalid embed code! Please provide a valid iframe or embed HTML.');
+    }
+});
+
+// Utility function to validate embed code (basic validation for iframe or embed tag)
+function isValidEmbedCode(code) {
+    const iframePattern = /<iframe\b[^>]*>(.*?)<\/iframe>/i; // Matches <iframe> tags
+    const embedPattern = /<embed\b[^>]*>/i; // Matches <embed> tags
+    return iframePattern.test(code) || embedPattern.test(code);
+}
+
+// Utility function to wrap embed code with a responsive container
+function wrapEmbedInResponsiveContainer(embedCode) {
+    return `
+        <div class="relative w-full overflow-hidden pb-[56.25%]"> <!-- 16:9 Aspect Ratio -->
+            <div class="absolute inset-0">
+                ${embedCode}
+            </div>
+        </div>
+    `;
+}
+
+
+
+document.getElementById('previewButton').addEventListener('click', () => {
+    const content = quill.root.innerHTML; // Get content from the editor
+
+    // Remove "Read More" placeholder comments for preview
+    const sanitizedContent = content.replace(/<!--READ_MORE-->/g, '');
+
+    // Display the sanitized content in the preview container
+    const previewContainer = document.getElementById('previewContainer');
+    document.getElementById('previewContent').innerHTML = sanitizedContent;
+    previewContainer.style.display = 'block';
+});
+
+
+        // Load articles on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchArticles(); // Fetch articles
+        });
 
         // Delete article
         window.deleteArticle = function(id) {
@@ -232,56 +447,74 @@
             `;
         }
 
-        // Add or update trending news
-        document.getElementById('trendingNewsForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+       // Initialize Quill editor for trending news
+const quillTrending = new Quill('#trendingEditor', {
+    theme: 'snow', // Use "bubble" or "snow" based on preference
+    modules: {
+        toolbar: [
+            [{ header: [1, 2, false] }],
+            ['bold', 'italic', 'underline'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['link', 'blockquote', 'image', 'video'],
+        ],
+    },
+});
 
-            const id = document.getElementById('trendingNewsId').value;
-            const title = document.getElementById('trendingTitle').value;
-            const content = document.getElementById('trendingContent').value;
-            const image = document.getElementById('trendingImage').value;
+// Add or update trending news
+document.getElementById('trendingNewsForm').addEventListener('submit', function (event) {
+    event.preventDefault();
 
-            const trendingNewsRef = ref(database, 'trending-news/' + (id || createSafePath(title)));
+    const id = document.getElementById('trendingNewsId').value;
+    const title = document.getElementById('trendingTitle').value;
+    const content = quillTrending.root.innerHTML; // Get rich text content from Quill
+    const image = document.getElementById('trendingImage').value;
 
-            set(trendingNewsRef, {
-                title: title,
-                content: content,
-                image: image,
-                timestamp: Date.now()
-            }).then(() => {
-                alert(id ? 'Trending news updated successfully!' : 'Trending news added successfully!');
-                document.getElementById('trendingNewsForm').reset();
-                document.getElementById('trendingNewsId').value = '';
-                fetchTrendingNews();
-            }).catch((error) => {
-                console.error('Error saving trending news: ', error);
-            });
+    const trendingNewsRef = ref(database, 'trending-news/' + (id || createSafePath(title)));
+
+    set(trendingNewsRef, {
+        title: title,
+        content: content,
+        image: image,
+        timestamp: Date.now(),
+    })
+        .then(() => {
+            alert(id ? 'Trending news updated successfully!' : 'Trending news added successfully!');
+            document.getElementById('trendingNewsForm').reset();
+            document.getElementById('trendingNewsId').value = '';
+            quillTrending.root.innerHTML = ''; // Clear editor content
+            fetchTrendingNews();
+        })
+        .catch((error) => {
+            console.error('Error saving trending news: ', error);
         });
+});
 
-        // Edit trending news
-        window.editTrendingNews = function(id, title, content, image) {
-            document.getElementById('trendingNewsId').value = id;
-            document.getElementById('trendingTitle').value = title;
-            document.getElementById('trendingContent').value = content;
-            document.getElementById('trendingImage').value = image;
-        };
+// Edit trending news
+window.editTrendingNews = function (id, title, content, image) {
+    document.getElementById('trendingNewsId').value = id;
+    document.getElementById('trendingTitle').value = title;
+    quillTrending.root.innerHTML = content; // Populate the editor with the existing content
+    document.getElementById('trendingImage').value = image;
+};
 
-        // Delete trending news
-        window.deleteTrendingNews = function(id) {
-            const trendingNewsRef = ref(database, 'trending-news/' + id);
-            remove(trendingNewsRef).then(() => {
-                alert('Trending news deleted successfully!');
-                fetchTrendingNews();
-            }).catch((error) => {
-                console.error('Error deleting trending news: ', error);
-            });
-        };
-
-        // Load articles on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchArticles(); // Existing function to fetch articles
-            fetchTrendingNews(); // New function to fetch trending news
+// Delete trending news
+window.deleteTrendingNews = function (id) {
+    const trendingNewsRef = ref(database, 'trending-news/' + id);
+    remove(trendingNewsRef)
+        .then(() => {
+            alert('Trending news deleted successfully!');
+            fetchTrendingNews();
+        })
+        .catch((error) => {
+            console.error('Error deleting trending news: ', error);
         });
+};
+
+// Fetch trending news on page load
+document.addEventListener('DOMContentLoaded', () => {
+    fetchTrendingNews(); // Fetch and display trending news
+});
+
     </script>
 </body>
 </html>

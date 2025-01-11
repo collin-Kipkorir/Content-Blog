@@ -7,7 +7,9 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script type="module" src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js"></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v16.0"></script>
 </head>
+
 <body class="bg-gray-50 text-gray-800 font-sans">
     <!-- Header -->
     <header class="bg-red-600 text-white py-4 px-6">
@@ -85,6 +87,8 @@
 
             titleElement.innerText = title || 'Article Not Found';
             breadcrumbTitleElement.innerText = title || 'Article Not Found';
+breadcrumbTitleElement.style.color = 'lightgrey'; // Set the text color to light grey
+
             contentElement.innerHTML = content || 'Content Not Available';
 
             // Insert image
