@@ -107,6 +107,7 @@
       text-overflow: ellipsis;
       /* Add ellipsis for overflow */
     }
+    
   </style>
 </head>
 
@@ -135,7 +136,7 @@
     <div class="relative z-10">
       <h2 class="text-3xl md:text-5xl font-bold text-white">Welcome to Hot News</h2>
       <p class="mt-4 text-lg md:text-xl text-gray-200">Stay updated with the latest tips, how-to guides, and expert
-        advices.</p>
+        advice.</p>
       <a href="#articles"
         class="mt-6 inline-block bg-red-600 text-white py-2 px-4 rounded-lg text-lg hover:bg-red-500 transition duration-300">Explore
         Articles</a>
@@ -299,19 +300,19 @@
     }
 
     function displayArticles(articleList) {
-      const articleContainer = document.getElementById('article-list');
-      if (!articleContainer) {
-        console.error('Element with id "article-list" not found.');
-        return;
-      }
-      articleContainer.innerHTML = articleList.map(article => {
-        const encodedTitle = encodeURIComponent(article.title || '');
-        const encodedContent = encodeURIComponent(article.content || '');
-        const encodedImage = encodeURIComponent(article.image || '');
-        const encodedVideo = encodeURIComponent(article.video || '');
-        const youTubeID = article.video ? getYouTubeID(article.video) : '';
+  const articleContainer = document.getElementById('article-list');
+  if (!articleContainer) {
+    console.error('Element with id "article-list" not found.');
+    return;
+  }
+  articleContainer.innerHTML = articleList.map(article => {
+  const encodedTitle = encodeURIComponent(article.title || '');
+  const encodedContent = encodeURIComponent(article.content || '');
+  const encodedImage = encodeURIComponent(article.image || '');
+  const encodedVideo = encodeURIComponent(article.video || '');
+  const youTubeID = article.video ? getYouTubeID(article.video) : '';
 
-        return `
+  return `
     <div class="border rounded-lg shadow-lg overflow-hidden bg-white p-2 relative">
       ${youTubeID ? `<iframe class="w-full h-48" src="https://www.youtube.com/embed/${youTubeID}" frameborder="0" allowfullscreen></iframe>` : ''}
       ${article.image ? `<img src="${article.image}" alt="${article.title || 'Article Image'}" class="w-full h-48 object-cover">` : ''}
@@ -322,10 +323,7 @@
            ${article.title}
         </a>
         <a href="reading.html?title=${encodedTitle}&content=${encodedContent}&image=${encodedImage}&video=${encodedVideo}" 
-   class="text-blue-500 hover:underline text-sm sm:text-base">
-   Read more
-</a>
-
+           class="text-blue-500 hover:underline">Read more</a>
       </h4>
       <p class="text-sm text-gray-600">${article.category || 'Uncategorized'}</p>
       <div class="absolute bottom-2 right-2">
@@ -334,7 +332,7 @@
         </a>
       </div>
     </div>`;
-      }).join('');
+}).join('');
     }
 
     function getYouTubeID(url) {

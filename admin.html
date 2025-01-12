@@ -8,101 +8,99 @@
     <script type="module" src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js"></script>
     <!-- Include Quill.js -->
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
     <style>
         body {
             background-color: #f9f9f9;
         }
+        h1 {
+            text-align: center;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .delete-button {
+            background-color: #dc3545;
+        }
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+        .social-post iframe {
+    width: 100%; /* Make iframe responsive */
+    max-width: 500px; /* Set a max width */
+    height: auto; /* Maintain aspect ratio */
+    border: none; /* Remove default border */
+}
+
     </style>
 </head>
-<body class="p-8 font-sans bg-gray-50">
-
-    <!-- Header Section -->
-    <header class="text-center mb-10">
-        <h1 class="text-3xl font-bold text-gray-800">Admin Portal</h1>
-    </header>
+<body class="p-6">
+    <h1 class="text-2xl font-bold mb-6">Admin Portal</h1>
 
     <!-- Articles Section -->
-    <div class="card bg-white shadow-lg rounded-lg mb-8 p-6">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Manage Articles</h2>
-
-        <!-- Article Form -->
-        <section class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg mt-10">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-5">Create / Edit Article</h2>
-            
-           <!-- Article Form -->
-<form id="articleForm" class="space-y-6">
-    <input type="hidden" id="articleId" value="">
-
-    <!-- Title and Category Inputs -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <input type="text" id="title" placeholder="Article Title" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <div class="card">
+        <h2 class="text-xl font-semibold mb-4">Manage Articles</h2>
+      <!-- Article Form -->
+<section class="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-10">
+    <h2 class="text-2xl font-semibold mb-5">Create / Edit Article</h2>
+    
+    <form id="articleForm" class="space-y-6">
+        <input type="hidden" id="articleId" value="">
         
-        <!-- Category Dropdown -->
-        <div>
-
-            <select id="category" required class="mt-2 w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="" disabled selected>Select a category</option>
-                <option value="Politics">Politics</option>
-                <option value="Entertainment">Entertainment</option>
-                <option value="Personal Development">Personal Development</option>
-                <option value="Technology">Technology</option>
-                <option value="Sports">Sports</option>
-                <option value="Health">Health</option>
-                <option value="Business">Business</option>
-                <option value="Science">Science</option>
-            </select>
+        <!-- Title and Category Inputs -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <input type="text" id="title" placeholder="Article Title" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="text" id="category" placeholder="Category" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
-    </div>
 
-    <!-- Quill Editor -->
-    <div id="editor" class="bg-gray-50 border border-gray-300 p-4 rounded-md"></div>
+        <!-- Quill Editor -->
+        <div id="editor" class="bg-gray-50 border border-gray-300 p-4 rounded-md"></div>
 
-    <!-- Image and Video URL Inputs -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <input type="text" id="image" placeholder="Image URL (optional)" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-        <input type="text" id="video" placeholder="Video URL (optional)" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-    </div>
-
-    <!-- Submit Button -->
-    <button type="submit" class="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600 transition duration-300">Save Article</button>
-</form>
-
-        </section>
-
-        <!-- Preview and Other Buttons -->
-        <div class="max-w-4xl mx-auto mt-10 space-y-4">
-            <div class="flex justify-between gap-4">
-                <button id="previewButton" class="w-1/3 bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-md transition duration-300">Preview</button>
-                <button id="addReadMoreButton" class="w-1/3 bg-green-500 hover:bg-green-600 text-white py-2 rounded-md transition duration-300">Add "Read More"</button>
-                <button id="embedSocialPostButton" class="w-1/3 bg-purple-500 hover:bg-purple-600 text-white py-2 rounded-md transition duration-300">Embed Social Post</button>
-            </div>
-
-            <!-- Preview Container -->
-            <div id="previewContainer" style="display:none;" class="bg-white p-5 rounded-lg border border-gray-300 mt-6">
-                <h3 class="text-xl font-semibold mb-4">Preview</h3>
-                <div id="previewContent" class="prose max-w-full"></div>
-            </div>
+        <!-- Image and Video URL Inputs -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <input type="text" id="image" placeholder="Image URL (optional)" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="text" id="video" placeholder="Video URL (optional)" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600 transition duration-300">Save Article</button>
+    </form>
+</section>
+
+<!-- Preview and Other Buttons -->
+<div class="max-w-3xl mx-auto mt-10 space-y-4">
+    <div class="flex justify-between gap-4">
+        <button id="previewButton" class="w-1/3 bg-yellow-500 text-white py-2 rounded-md hover:bg-yellow-600 transition duration-300">Preview</button>
+        <button id="addReadMoreButton" class="w-1/3 bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition duration-300">Add "Read More"</button>
+        <button id="embedSocialPostButton" class="w-1/3 bg-purple-500 text-white py-2 rounded-md hover:bg-purple-600 transition duration-300">Embed Social Post</button>
     </div>
 
-    <!-- Articles List -->
-    <div class="card bg-white shadow-lg rounded-lg p-6">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Articles List</h2>
+    <!-- Preview Container -->
+    <div id="previewContainer" style="display:none;" class="bg-white p-5 rounded-lg border border-gray-300 mt-6">
+        <h3 class="text-xl font-semibold mb-4">Preview</h3>
+        <div id="previewContent" class="prose max-w-full"></div>
+    </div>
+</div>
+
+
         <div class="article-list" id="articleList">
             <!-- Articles will be dynamically inserted here -->
         </div>
     </div>
 
     <!-- Trending News Section -->
-    <div class="card bg-white shadow-lg rounded-lg p-6 mt-8">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Manage Trending News</h2>
-
-        <form id="trendingNewsForm" class="max-w-4xl mx-auto space-y-6 p-6 bg-white rounded-lg shadow-lg border border-gray-200">
+    <div class="card">
+        <h2 class="text-xl font-semibold mb-4">Manage Trending News</h2>
+        <form id="trendingNewsForm" class="max-w-3xl mx-auto space-y-6 p-6 bg-white rounded-lg shadow-lg border border-gray-200">
+            <!-- Hidden Input for ID -->
             <input type="hidden" id="trendingNewsId" value="" />
-            
+        
             <!-- Title Input Field -->
             <div>
                 <label for="trendingTitle" class="block text-lg font-semibold text-gray-800">Title</label>
@@ -131,13 +129,15 @@
                 </button>
             </div>
         </form>
-
+        
+        
         <div class="trending-news-list" id="trendingNewsList">
             <!-- Trending news items will be dynamically inserted here -->
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/quill/dist/quill.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/quill/dist/quill.snow.css" rel="stylesheet">
     <script src="admin.js"></script>
 
     <script type="module">
@@ -160,60 +160,45 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
-    // Fetch articles from Firebase
-function fetchArticles() {
-    const articlesRef = ref(database, 'articles');
-    onValue(articlesRef, (snapshot) => {
-        const articles = snapshot.val();
-        const articlesArray = [];
-
-        if (articles) {
-            for (let id in articles) {
-                articlesArray.push({ id, ...articles[id] });
-            }
+    
+        // Fetch articles from Firebase
+        function fetchArticles() {
+            const articlesRef = ref(database, 'articles');
+            onValue(articlesRef, (snapshot) => {
+                const articles = snapshot.val();
+                const articlesArray = [];
+    
+                if (articles) {
+                    for (let id in articles) {
+                        articlesArray.push({ id, ...articles[id] });
+                    }
+                }
+    
+                displayArticles(articlesArray);
+            }, (error) => {
+                console.error("Error fetching articles: ", error);
+            });
         }
-
-        displayArticles(articlesArray);
-    }, (error) => {
-        console.error("Error fetching articles: ", error);
-    });
-}
-
-// Function to sanitize content and prevent XSS by escaping HTML tags
-function sanitizeContent(content) {
-    const div = document.createElement('div');
-    div.textContent = content;  // This will escape all potentially dangerous characters
-    return div.innerHTML;  // This will give the escaped content as plain text
-}
-
-// Function to display articles
-function displayArticles(articleList) {
+    
+        function displayArticles(articleList) {
     const articleListContainer = document.getElementById('articleList');
     articleListContainer.innerHTML = articleList
         .map((article) => {
-            // Sanitize title, category, and content to avoid XSS and display as plain text
-            const title = sanitizeContent(article.title);
-            const category = sanitizeContent(article.category);
-            const content = sanitizeContent(article.content); // Sanitize content to display as text
-            const image = article.image || ''; // Image URL
-            const video = article.video || ''; // Video URL
+            const title = article.title.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+            const category = article.category.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+            const content = article.content;
+            const image = article.image || ''; // Already wrapped in a responsive container
+            const video = article.video || ''; // Already wrapped in a responsive container
 
-            // Generating HTML for the article with buttons
             return `
-                <div class="article-item border p-4 mb-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                    <h4 class="text-xl font-semibold mb-2">${title}</h4>
-                    <p class="text-sm text-gray-600 mb-2"><strong>Category:</strong> ${category}</p>
-                    <p class="text-base mb-4">${content}</p>
-                    ${image ? `<div class="relative w-full overflow-hidden pb-[56.25%]">
-                                   <img src="${image}" alt="Article Image" class="absolute inset-0 w-full h-full object-cover rounded-md">
-                               </div>` : ''}
-                    ${video ? `<div class="relative w-full overflow-hidden pb-[56.25%]">
-                                   <iframe src="${video}" class="absolute inset-0 w-full h-full" frameborder="0" allowfullscreen></iframe>
-                               </div>` : ''}
-                    <div class="flex space-x-4 mt-4">
-                        <button onclick="editArticle('${article.id}', '${title}', '${category}', '${content}', '${image}', '${video}')" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Edit</button>
-                        <button onclick="deleteArticle('${article.id}')" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition duration-300">Delete</button>
-                    </div>
+                <div class="article-item border p-2 mb-2 rounded">
+                    <h4 class="font-bold">${title}</h4>
+                    <p><strong>Category:</strong> ${category}</p>
+                    <p>${content}</p>
+                    ${image}
+                    ${video}
+                    <button onclick="editArticle('${article.id}', '${title}', '${category}', '${content}', '${image}', '${video}')" class="bg-blue-500 text-white p-1 rounded">Edit</button>
+                    <button class="delete-button" onclick="deleteArticle('${article.id}')">Delete</button>
                 </div>
             `;
         })
@@ -266,23 +251,21 @@ function displayArticles(articleList) {
                 }
             }
         });
-    // Add or update article
+    
+      // Add or update article
 document.getElementById('articleForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
     const id = document.getElementById('articleId').value;
     const title = document.getElementById('title').value;
-    const category = document.getElementById('category').value;  // Get selected category
+    const category = document.getElementById('category').value;
     const content = quill.root.innerHTML;
 
-    // Get image and video URLs (don't wrap image)
     let image = document.getElementById('image').value;
     let video = document.getElementById('video').value;
 
-    // If there's a valid image URL, just store the URL itself (no wrapping)
-    image = image ? image : null;
-
-    // Wrap video URL in responsive container if provided
+    // Wrap image and video URLs in responsive containers
+    image = image ? wrapImageInResponsiveContainer(image) : null;
     video = video ? wrapVideoInResponsiveContainer(video) : null;
 
     const safePath = createSafePath(title);
@@ -290,9 +273,9 @@ document.getElementById('articleForm').addEventListener('submit', function(event
 
     set(articleRef, {
         title: title,
-        category: category,  // Save the selected category
+        category: category,
         content: content,
-        image: image,  // Store image URL directly
+        image: image,
         video: video,
         timestamp: Date.now(),
     })
@@ -300,13 +283,21 @@ document.getElementById('articleForm').addEventListener('submit', function(event
             alert(id ? 'Article updated successfully!' : 'Article added successfully!');
             document.getElementById('articleForm').reset();
             document.getElementById('articleId').value = '';
-            fetchArticles(); // Refresh the list of articles
+            fetchArticles();
         })
         .catch((error) => {
             console.error('Error saving article: ', error);
         });
 });
 
+// Utility function to wrap an image in a responsive container
+function wrapImageInResponsiveContainer(imageUrl) {
+    return `
+        <div class="relative w-full overflow-hidden pb-[56.25%]"> <!-- 16:9 Aspect Ratio -->
+            <img src="${imageUrl}" alt="Image" class="absolute inset-0 w-full h-full object-cover">
+        </div>
+    `;
+}
 
 // Utility function to wrap a video in a responsive container
 function wrapVideoInResponsiveContainer(videoUrl) {
@@ -316,7 +307,6 @@ function wrapVideoInResponsiveContainer(videoUrl) {
         </div>
     `;
 }
-
 
     
         // Edit article
@@ -347,10 +337,18 @@ document.getElementById('addReadMoreButton').addEventListener('click', () => {
     alert('Read More break added!');
 });
 document.getElementById('embedSocialPostButton').addEventListener('click', () => {
-    const embedCode = prompt('Enter embed code (e.g., Twitter, Instagram):');
-    if (embedCode) {
-      const range = quill.getSelection();
-      quill.clipboard.dangerouslyPasteHTML(range.index, embedCode);
+    const embedCode = prompt('Paste the embed code (e.g., iframe) for the social post:');
+
+    if (embedCode && isValidEmbedCode(embedCode)) {
+        // Wrap embed code in a responsive container
+        const responsiveEmbedCode = wrapEmbedInResponsiveContainer(embedCode);
+
+        // Insert responsive embed code into the editor
+        const cursorPosition = quill.getSelection(); // Get the current cursor position
+        quill.clipboard.dangerouslyPasteHTML(cursorPosition.index, responsiveEmbedCode); // Insert wrapped HTML
+        alert('Social post embedded!');
+    } else {
+        alert('Invalid embed code! Please provide a valid iframe or embed HTML.');
     }
 });
 
