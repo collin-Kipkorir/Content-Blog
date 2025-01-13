@@ -161,7 +161,7 @@
       <div class="w-full md:w-4/5 lg:w-4/5 mx-auto">
 
         <div class="grid grid-cols-1 gap-4">
-          <h3 class="text-lg font-bold bg-red-600 text-white p-3 rounded-t-lg">LATEST ARTICLES</h3>
+          <h3 class="text-lg font-bold bg-red-600 text-white p-1 rounded-t-lg">LATEST ARTICLES</h3>
           <!-- <a href="https://beta.publishers.adsterra.com/referral/EyjsvkL6AR" rel="nofollow"><img alt="banner"
               src="https://landings-cdn.adsterratech.com/referralBanners/gif/720x90_adsterra_reff.gif" /></a> -->
           <div id="article-list" class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
@@ -172,7 +172,7 @@
       <!-- Sidebar -->
       <aside class="w-full md:w-2/5 lg:w-2/5 mx-auto">
         <div class="bg-white rounded-lg shadow-lg">
-          <h3 class="text-lg font-bold bg-red-600 text-white p-3 rounded-t-lg">TRENDING NEWS</h3>
+          <h3 class="text-lg font-bold bg-red-600 text-white p-1 rounded-t-lg">TRENDING NEWS</h3>
           <ul id="trending-news" class="mt-1 space-y-2 text-gray-700">
             <!-- Trending news items will be dynamically inserted here -->
           </ul>
@@ -180,7 +180,6 @@
       </aside>
     </div>
   </section>
-
 
   <!-- Footer -->
   <footer class="bg-gray-800 text-white p-6 text-center">
@@ -287,56 +286,85 @@
         }
       }, console.error);
     }
-
     function fetchArticles() {
-      const articlesRef = ref(database, 'articles');
-      onValue(articlesRef, (snapshot) => {
-        const articles = snapshot.val();
-        const articlesList = Object.keys(articles || {}).map(id => ({ id, ...articles[id] }));
-        articlesList.sort((a, b) => b.timestamp - a.timestamp);
-        displayArticles(articlesList);
-      });
-    }
+  const articlesRef = ref(database, 'articles');
+  onValue(articlesRef, (snapshot) => {
+    const articles = snapshot.val();
+    const articlesList = Object.keys(articles || {}).map(id => ({ id, ...articles[id] }));
+    articlesList.sort((a, b) => b.timestamp - a.timestamp); // Sort by timestamp descending
+    displayArticles(articlesList);
+  });
+}
+    function getUrlParameter(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+}
 
-    function displayArticles(articleList) {
-      const articleContainer = document.getElementById('article-list');
-      if (!articleContainer) {
-        console.error('Element with id "article-list" not found.');
-        return;
-      }
-      articleContainer.innerHTML = articleList.map(article => {
-        const encodedTitle = encodeURIComponent(article.title || '');
-        const encodedContent = encodeURIComponent(article.content || '');
-        const encodedImage = encodeURIComponent(article.image || '');
-        const encodedVideo = encodeURIComponent(article.video || '');
-        const youTubeID = article.video ? getYouTubeID(article.video) : '';
+function displayArticles(articleList) {
+  const articleContainer = document.getElementById('article-list');
+  if (!articleContainer) {
+    console.error('Element with id "article-list" not found.');
+    return;
+  }
 
-        return `
-    <div class="border rounded-lg shadow-lg overflow-hidden bg-white p-2 relative">
-      ${youTubeID ? `<iframe class="w-full h-48" src="https://www.youtube.com/embed/${youTubeID}" frameborder="0" allowfullscreen></iframe>` : ''}
-      ${article.image ? `<img src="${article.image}" alt="${article.title || 'Article Image'}" class="w-full h-48 object-cover">` : ''}
-      <h4 class="font-bold text-lg my-2">
-        <a href="reading.html?title=${encodedTitle}&content=${encodedContent}&image=${encodedImage}&video=${encodedVideo}" 
-           class="hover:underline block overflow-hidden whitespace-normal text-ellipsis line-clamp-2" 
+  articleContainer.innerHTML = articleList.map(article => {
+    const encodedId = encodeURIComponent(article.id || '');
+    const youTubeID = article.video ? getYouTubeID(article.video) : '';
+
+    return `
+     <div class="border rounded-lg shadow-xl overflow-hidden bg-white p-2 relative">
+    <!-- Video Embed Section -->
+    ${youTubeID ? `
+        <div class="relative overflow-hidden rounded-lg mb-4">
+            <iframe class="w-full h-56 md:h-64 lg:h-72 object-cover rounded-lg" 
+                    src="https://www.youtube.com/embed/${youTubeID}" 
+                    frameborder="0" 
+                    allowfullscreen>
+            </iframe>
+        </div>
+    ` : ''}
+
+    <!-- Image Section -->
+    ${article.image ? `
+        <img src="${article.image}" 
+             alt="${article.title || 'Article Image'}" 
+             class="w-full h-56 md:h-64 lg:h-72 object-cover rounded-lg my-2 shadow-md transition-transform duration-500 ease-in-out transform hover:scale-105">
+    ` : ''}
+
+    <!-- Title Section -->
+    <h4 class="font-semibold text-xl text-gray-800 my-2 hover:text-black transition-colors duration-200 ease-in-out">
+        <a href="reading.html?id=${encodedId}" 
+           class="hover:underline block overflow-hidden text-ellipsis line-clamp-2" 
            style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
            ${article.title}
         </a>
-        <a href="reading.html?title=${encodedTitle}&content=${encodedContent}&image=${encodedImage}&video=${encodedVideo}" 
-   class="text-blue-500 hover:underline text-sm sm:text-base">
-   Read more
-</a>
+    </h4>
 
-      </h4>
-      <p class="text-sm text-gray-600">${article.category || 'Uncategorized'}</p>
-      <div class="absolute bottom-2 right-2">
-        <a href="#" onclick="shareArticle('${encodedTitle}', location.href)" class="text-gray-600 hover:text-black">
-          <i class="fas fa-share-alt"></i>
+    <!-- Category Section -->
+    <p class="text-sm text-gray-500 mb-1">${article.category || 'Uncategorized'}</p>
+
+    <!-- Action Section (Read More & Share) -->
+    <div class="flex justify-between items-center mt-1">
+        <a href="reading.html?id=${encodedId}" 
+           class="text-blue-500 hover:text-blue-700 text-sm sm:text-base font-medium transition-colors duration-200 ease-in-out">
+           Read more
         </a>
-      </div>
-    </div>`;
-      }).join('');
-    }
+        <a href="#" onclick="shareArticle('${article.title}', location.href)" 
+           class="text-gray-600 hover:text-gray-900 text-xl">
+            <i class="fas fa-share-alt"></i>
+        </a>
+    </div>
+</div>
 
+      </div>`;
+  }).join('');
+}
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+            fetchArticles();  // Make sure the function is available here
+        });
     function getYouTubeID(url) {
       const match = url.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=))([^?&]+)/);
       return match ? match[1] : '';
@@ -357,3 +385,4 @@
 </body>
 
 </html>
+

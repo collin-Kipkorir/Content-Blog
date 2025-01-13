@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reading Page</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script type="module" src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js"></script>
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v16.0"></script>
 </head>
 
 <body class="bg-gray-50 text-gray-800 font-sans">
@@ -18,19 +15,15 @@
 
     <!-- Main Content -->
     <div class="container mx-auto p-4 grid grid-cols-1 md:grid-cols-12 gap-6">
-        <!-- Social Section (Hidden on smaller screens) -->
         <aside class="hidden md:block md:col-span-3 lg:col-span-2">
-            <ul id="social-links" class="space-y-3">
-                <!-- Social items -->
-            </ul>
+            <ul id="social-links" class="space-y-3"></ul>
         </aside>
 
-        <!-- Main Article Section -->
         <div class="md:col-span-9 lg:col-span-7">
             <nav class="text-sm text-gray-800 mb-4 flex items-center space-x-2">
                 <a href="index.html" class="hover:underline text-red-500">Home</a>
                 <span>&gt;</span>
-                <a href="articles.html" class="hover:underline text-red-500">Articles</a>
+                <a href="index.html" class="hover:underline text-red-500">Articles</a>
                 <span>&gt;</span>
                 <span id="breadcrumb-title" class="font-semibold text-gray-700 truncate max-w-full sm:max-w-xs overflow-hidden inline-block"></span>
             </nav>
@@ -40,7 +33,6 @@
             <div id="article-content" class="space-y-4 text-justify leading-relaxed"></div>
         </div>
 
-        <!-- Trending News & Subscription Form -->
         <aside class="md:col-span-12 lg:col-span-3">
             <h3 class="text-lg font-bold mb-3">Trending News</h3>
             <ul id="trending-news" class="space-y-3"></ul>
@@ -53,10 +45,12 @@
         </aside>
     </div>
 
+    <input type="hidden" id="encoded-content" value="EncodedContentHere">
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
-
+    
         const firebaseConfig = {
             apiKey: "AIzaSyDv6Xp4ZYnF4wuAEvSFOez_Gluus3hrlIE",
             authDomain: "content-blog-3ba6d.firebaseapp.com",
@@ -67,68 +61,95 @@
             appId: "1:687597872642:web:79d50fb69ed451e020e91b",
             measurementId: "G-YM6PNBB100"
         };
-
+    
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
-
-        function getUrlParameter(name) {
+       // Function to get URL parameters
+       function getUrlParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
         }
+
         function loadArticle() {
-            const title = getUrlParameter('title');
-            const content = getUrlParameter('content');
-            const image = getUrlParameter('image');
-            let video = getUrlParameter('video');
+    const id = getUrlParameter('id');
+    if (!id) {
+        document.getElementById('article-title').innerText = 'Article Not Found';
+        document.getElementById('breadcrumb-title').innerText = 'Article Not Found'; // Set breadcrumb to 'Not Found'
+        return;
+    }
 
-            const titleElement = document.getElementById('article-title');
-            const breadcrumbTitleElement = document.getElementById('breadcrumb-title');
-            const contentElement = document.getElementById('article-content');
+    const articlesRef = ref(database, `articles/${id}`);
+    onValue(articlesRef, (snapshot) => {
+        const foundArticle = snapshot.val();
 
-            titleElement.innerText = title || 'Article Not Found';
-            breadcrumbTitleElement.innerText = title || 'Article Not Found';
-breadcrumbTitleElement.style.color = 'lightgrey'; // Set the text color to light grey
+        if (foundArticle) {
+            // Update article title and breadcrumb
+            document.getElementById('article-title').innerText = foundArticle.title;
+            document.getElementById('breadcrumb-title').innerText = foundArticle.title;
+            document.getElementById('breadcrumb-title').style.color = 'lightgrey'; // Set breadcrumb color to light grey
 
-            contentElement.innerHTML = content || 'Content Not Available';
+            // Clear the article-content container before adding new elements
+            const contentContainer = document.getElementById('article-content');
+            contentContainer.innerHTML = ''; 
 
-            // Insert image
-            if (image) {
-                document.getElementById('article-image').innerHTML = `<img src="${image}" alt="${title}" class="w-full h-auto my-4 rounded-lg">`;
+            // Add media content (image or video) below the title
+            if (foundArticle.image) {
+                contentContainer.innerHTML += `<img src="${foundArticle.image}" alt="${foundArticle.title}" class="w-full h-auto my-4">`;
             }
+            if (foundArticle.video) {
+    // Check if the video URL is a YouTube URL
+    let videoUrl = foundArticle.video;
+    if (videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be")) {
+        // Replace to embed format
+        videoUrl = videoUrl.replace("youtube.com/watch?v=", "youtube.com/embed/").replace("youtu.be/", "youtube.com/embed/");
+    }
 
-            // Convert YouTube URL for embedding
-            if (video) {
-                if (video.includes("m.youtube.com") || video.includes("youtube.com/watch")) {
-                    video = video.replace("m.youtube.com/watch", "www.youtube.com/embed")
-                        .replace("youtube.com/watch?v=", "youtube.com/embed/");
-                }
-                contentElement.innerHTML += `
-            <iframe src="${video}" class="w-full h-64 my-4 rounded-lg" frameborder="0" allowfullscreen></iframe>
+    // Add iframe only if it's a valid YouTube embed link
+    if (videoUrl.includes("youtube.com/embed/")) {
+        contentContainer.innerHTML += `
+            <iframe src="${videoUrl}" class="w-full h-64 my-4" frameborder="0" allowfullscreen></iframe>
         `;
-            }
+    } else {
+        contentContainer.innerHTML += `<p>Invalid video URL</p>`;
+    }
+}
+
+
+            // Add main content after media
+            contentContainer.innerHTML += `<div>${foundArticle.content}</div>`;
+        } else {
+            document.getElementById('article-title').innerText = 'Article Not Found';
+            document.getElementById('breadcrumb-title').innerText = 'Article Not Found'; // Set breadcrumb to 'Not Found'
+            document.getElementById('article-content').innerHTML = 'Content Not Available';
         }
+    }, (error) => {
+        console.error("Error fetching article: ", error);
+    });
+}
 
 
-
-
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadArticle();
+        });
         function fetchTrendingNews() {
             const trendingNewsRef = ref(database, 'trending-news');
             onValue(trendingNewsRef, (snapshot) => {
                 const trendingNews = snapshot.val();
                 const trendingNewsList = document.getElementById('trending-news');
                 trendingNewsList.innerHTML = '';
-
+    
                 if (trendingNews) {
                     for (let id in trendingNews) {
                         const newsItem = trendingNews[id];
                         const timestamp = new Date(newsItem.timestamp).toLocaleString();
                         const listItem = document.createElement('li');
                         const image = newsItem.image ? `<img src="${newsItem.image}" alt="${newsItem.title}" class="w-16 h-16 object-cover rounded">` : '';
-                        listItem.innerHTML = ` 
+                        listItem.innerHTML = `
                             <div class="border-b pb-2 mb-2 flex items-start">
                                 ${image}
                                 <div class="ml-4 flex-1">
-                                    <a href="${newsItem.url || '#'}" class="font-bold text-red-600 hover:underline ">${newsItem.title}</a>
+                                    <a href="${newsItem.url || '#'}" class="font-bold text-red-600 hover:underline">${newsItem.title}</a>
                                     <p class="text-sm text-gray-500">${timestamp}</p>
                                 </div>
                             </div>
@@ -142,12 +163,12 @@ breadcrumbTitleElement.style.color = 'lightgrey'; // Set the text color to light
                 console.error("Error fetching trending news: ", error);
             });
         }
-
+    
         document.addEventListener('DOMContentLoaded', () => {
             loadArticle();
             fetchTrendingNews();
         });
-
+    
         document.getElementById('subscription-form').addEventListener('submit', function (event) {
             event.preventDefault();
             const email = this.querySelector('input[type="email"]').value;
@@ -155,6 +176,6 @@ breadcrumbTitleElement.style.color = 'lightgrey'; // Set the text color to light
             this.reset();
         });
     </script>
+    
 </body>
-
 </html>
