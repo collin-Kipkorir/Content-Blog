@@ -111,29 +111,55 @@
 </head>
 
 <body class="bg-gray-50 text-gray-800">
-  <!-- Navbar -->
-  <header class="bg-red-600 text-white p-4 sticky top-0 z-50">
-    <div class="container mx-auto flex justify-between items-center">
-      <div class="flex items-center">
-        <img src="images/hot_logo.webp" alt="Hot News Logo" class="h-10 mr-2">
-        <h1 class="text-xl font-bold">Hot News</h1>
-      </div>
-      <nav>
-        <ul class="flex space-x-4">
-          <li><a href="#" class="hover:underline text-sm">Home</a></li>
-          <li><a href="#articles" class="hover:underline text-sm">Articles</a></li>
-          <li><a href="#about" class="hover:underline text-sm">About</a></li>
-        </ul>
-      </nav>
+<!-- Header -->
+<header class="bg-gray-900 text-gray-100 p-4 sticky top-0 z-50 shadow-md">
+  <div class="container mx-auto flex justify-between items-center">
+    
+    <!-- Logo and Brand -->
+    <div class="flex items-center space-x-2">
+      <img src="images/hot_logo.webp" alt="Hot News Logo" class="h-10 w-auto">
+      <span class="text-2xl md:text-3xl tracking-wider hover:text-red-500 transition-all cursor-pointer">
+        Bright Facts
+      </span>
+      
     </div>
-  </header>
+    
+    <!-- Navigation -->
+    <nav class="hidden md:block">
+      <ul class="flex space-x-6 text-sm font-medium">
+        <li><a href="#" class="hover:text-red-500 transition-all">Home</a></li>
+        <li><a href="#articles" class="hover:text-red-500 transition-all">Articles</a></li>
+        <li><a href="#about" class="hover:text-red-500 transition-all">About</a></li>
+        <li><a href="#topics" class="hover:text-red-500 transition-all">Topics</a></li>
+      </ul>
+    </nav>
+    
+    <!-- Mobile Menu Button -->
+    <button id="menu-toggle" class="md:hidden p-2 rounded text-gray-400 hover:text-red-500 focus:outline-none">
+      <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </div>
+  
+  <!-- Mobile Navigation -->
+  <div id="mobile-menu" class="hidden md:hidden mt-4">
+    <ul class="space-y-2 text-sm font-medium">
+      <li><a href="#" class="block hover:text-red-500 transition-all">Home</a></li>
+      <li><a href="#articles" class="block hover:text-red-500 transition-all">Articles</a></li>
+      <li><a href="#about" class="block hover:text-red-500 transition-all">About</a></li>
+      <li><a href="#topics" class="block hover:text-red-500 transition-all">Topics</a></li>
+    </ul>
+  </div>
+</header>
+
 
   <!-- Hero Section -->
   <section class="relative text-center py-12 bg-blue-50 bg-cover bg-center"
     style="background-image: url('assets/videos/bgrvid.gif');">
     <div class="absolute inset-0 bg-black opacity-50"></div> <!-- Overlay for better text visibility -->
     <div class="relative z-10">
-      <h2 class="text-3xl md:text-5xl font-bold text-white">Welcome to Hot News</h2>
+      <!-- <h2 class="text-3xl md:text-5xl font-bold text-white">Welcome to Hot News</h2> -->
       <p class="mt-4 text-lg md:text-xl text-gray-200">Stay updated with the latest tips, how-to guides, and expert
         advices.</p>
       <a href="#articles"
@@ -149,7 +175,7 @@
       <!-- Sidebar -->
       <aside class="hidden md:block w-full md:w-1/5 lg:w-1/5 mx-auto">
         <div class="bg-white rounded-lg shadow-lg">
-          <h3 class="text-lg font-bold bg-red-600 text-white p-3 rounded-t-lg">POPULAR</h3>
+          <h3 class="text-lg font-bold bg-red-600 text-white p-3 rounded-t-lg">Recent</h3>
           <ul id="latest-news" class="mt-2 space-y-2 text-gray-700">
             <!-- Trending news items will be dynamically inserted here -->
           </ul>
@@ -172,7 +198,7 @@
       <!-- Sidebar -->
       <aside class="w-full md:w-2/5 lg:w-2/5 mx-auto">
         <div class="bg-white rounded-lg shadow-lg">
-          <h3 class="text-lg font-bold bg-red-600 text-white p-1 rounded-t-lg">TRENDING NEWS</h3>
+          <h3 class="text-lg font-bold bg-red-600 text-white p-1 rounded-t-lg">Popular</h3>
           <ul id="trending-news" class="mt-1 space-y-2 text-gray-700">
             <!-- Trending news items will be dynamically inserted here -->
           </ul>
@@ -181,65 +207,87 @@
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="bg-gray-800 text-white p-6 text-center">
-    <div class="container mx-auto">
-      <div class="flex flex-col md:flex-row justify-between items-center mb-4">
-        <div class="mb-4 md:mb-0">
-          <h3 class="text-lg md:text-xl font-bold">Stay Connected</h3>
-          <div class="flex justify-center space-x-6 mt-2">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"
-              class="hover:text-gray-400 transition duration-300">
-              <i class="fab fa-facebook-f fa-lg"></i>
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter"
-              class="hover:text-gray-400 transition duration-300">
-              <i class="fab fa-twitter fa-lg"></i>
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
-              class="hover:text-gray-400 transition duration-300">
-              <i class="fab fa-instagram fa-lg"></i>
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"
-              class="hover:text-gray-400 transition duration-300">
-              <i class="fab fa-linkedin-in fa-lg"></i>
-            </a>
-          </div>
-        </div>
-        <div>
-          <h3 class="text-lg md:text-xl font-bold">Quick Links</h3>
-          <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 mt-2">
-            <li><a href="#" class="hover:text-gray-400 transition duration-300">Privacy Policy</a></li>
-            <li><a href="#" class="hover:text-gray-400 transition duration-300">Terms of Service</a></li>
-            <li><a href="#" class="hover:text-gray-400 transition duration-300">Contact Us</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="mb-4">
-        <h3 class="text-lg md:text-xl font-bold">Popular Topics</h3>
-        <ul class="flex flex-col md:flex-row justify-center space-y-2 md:space-y-0 md:space-x-4 mt-2">
-          <li><a href="#" class="hover:text-gray-400 transition duration-300">News</a></li>
-          <li><a href="#" class="hover:text-gray-400 transition duration-300">Tips</a></li>
-          <li><a href="#" class="hover:text-gray-400 transition duration-300">Politics</a></li>
-          <li><a href="#" class="hover:text-gray-400 transition duration-300">Business</a></li>
-          <li><a href="#" class="hover:text-gray-400 transition duration-300">Technology</a></li>
-          <li><a href="#" class="hover:text-gray-400 transition duration-300">Health</a></li>
-        </ul>
-      </div>
-
-      <div class="mb-4">
-        <h3 class="text-lg md:text-xl font-bold">Subscribe to Our Newsletter</h3>
-        <form class="flex justify-center mt-2">
-          <input type="email" placeholder="Enter your email" class="p-2 rounded-l-md border border-gray-300" required>
+<!-- Footer -->
+<footer class="bg-gray-900 text-gray-300 py-10">
+  <div class="container mx-auto px-4">
+    
+    <!-- Top Section: Newsletter and Socials -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Newsletter -->
+      <div>
+        <h3 class="text-xl font-bold mb-3">Subscribe for Timeless Insights</h3>
+        <p class="text-sm mb-4">Get curated evergreen content delivered directly to your inbox.</p>
+        <form class="flex">
+          <input type="email" placeholder="Enter your email" 
+                 class="w-full p-3 rounded-l-md bg-gray-800 border border-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500"
+                 required>
           <button type="submit"
-            class="bg-red-600 text-white p-2 rounded-r-md hover:bg-red-500 transition duration-300">Subscribe</button>
+                  class="bg-red-600 text-white px-4 py-3 rounded-r-md hover:bg-red-500 transition-all">Subscribe</button>
         </form>
       </div>
-
-      <p class="text-sm md:text-base">&copy; 2024 Hot News. All Rights Reserved.</p>
+      
+      <!-- Social Media Links -->
+      <div>
+        <h3 class="text-xl font-bold mb-3">Follow Us</h3>
+        <p class="text-sm mb-4">Join our community for more updates and timeless knowledge.</p>
+        <div class="flex space-x-6">
+          <a href="#" aria-label="Facebook" class="hover:text-blue-500 transition-all"><i class="fab fa-facebook-f fa-lg"></i></a>
+          <a href="#" aria-label="Twitter" class="hover:text-blue-400 transition-all"><i class="fab fa-twitter fa-lg"></i></a>
+          <a href="#" aria-label="LinkedIn" class="hover:text-blue-600 transition-all"><i class="fab fa-linkedin fa-lg"></i></a>
+          <a href="#" aria-label="YouTube" class="hover:text-red-500 transition-all"><i class="fab fa-youtube fa-lg"></i></a>
+        </div>
+      </div>
     </div>
-  </footer>
+    
+    <!-- Middle Section: Navigation and Popular Categories -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
+      <!-- Quick Links -->
+      <div>
+        <h4 class="text-lg font-semibold mb-3">Quick Links</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-gray-400 transition-all">Privacy Policy</a></li>
+          <li><a href="#" class="hover:text-gray-400 transition-all">Terms of Service</a></li>
+          <li><a href="#" class="hover:text-gray-400 transition-all">Contact Us</a></li>
+        </ul>
+      </div>
+      
+      <!-- Popular Evergreen Topics -->
+      <div>
+        <h4 class="text-lg font-semibold mb-3">Popular Topics</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-gray-400 transition-all">Timeless Tips</a></li>
+          <li><a href="#" class="hover:text-gray-400 transition-all">Success Stories</a></li>
+          <li><a href="#" class="hover:text-gray-400 transition-all">Financial Wisdom</a></li>
+        </ul>
+      </div>
+      
+      <!-- Featured Collections -->
+      <div>
+        <h4 class="text-lg font-semibold mb-3">Featured Collections</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-gray-400 transition-all">Life Lessons</a></li>
+          <li><a href="#" class="hover:text-gray-400 transition-all">Productivity Hacks</a></li>
+          <li><a href="#" class="hover:text-gray-400 transition-all">Business Foundations</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom Section: Search and Copyright -->
+    <div class="mt-12 border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center">
+      <div class="mb-4 md:mb-0">
+        <h4 class="text-lg font-semibold">Explore More</h4>
+        <form class="flex mt-2">
+          <input type="text" placeholder="Search timeless content..." 
+                 class="p-2 rounded-l-md w-64 bg-gray-800 border border-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500">
+          <button type="submit" class="bg-red-600 text-white px-4 rounded-r-md hover:bg-red-500 transition-all">Search</button>
+        </form>
+      </div>
+      
+      <p class="text-sm">&copy; 2024 Evergreen Articles. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
     import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
@@ -257,6 +305,10 @@
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
+    document.getElementById('menu-toggle').addEventListener('click', () => {
+  const menu = document.getElementById('mobile-menu');
+  menu.classList.toggle('hidden');
+});
 
     function fetchTrendingNews() {
       const trendingNewsRef = ref(database, 'trending-news');
@@ -313,23 +365,25 @@ function displayArticles(articleList) {
 
     return `
      <div class="border rounded-lg shadow-xl overflow-hidden bg-white p-2 relative">
-    <!-- Video Embed Section -->
-    ${youTubeID ? `
-        <div class="relative overflow-hidden rounded-lg mb-4">
-            <iframe class="w-full h-56 md:h-64 lg:h-72 object-cover rounded-lg" 
-                    src="https://www.youtube.com/embed/${youTubeID}" 
-                    frameborder="0" 
-                    allowfullscreen>
-            </iframe>
-        </div>
-    ` : ''}
+   <!-- Video Embed Section -->
+${youTubeID ? `
+    <div class="relative overflow-hidden rounded-lg mb-4 shadow-md transition-transform duration-500 ease-in-out transform hover:scale-105">
+        <iframe class="w-full h-56 md:h-64 lg:h-72 object-cover rounded-lg" 
+                src="https://www.youtube.com/embed/${youTubeID}" 
+                frameborder="0" 
+                allowfullscreen>
+        </iframe>
+    </div>
+` : ''}
 
-    <!-- Image Section -->
-    ${article.image ? `
+<!-- Image Section -->
+${article.image ? `
+    <div class="relative overflow-hidden rounded-lg mb-4 shadow-md transition-transform duration-500 ease-in-out transform hover:scale-105">
         <img src="${article.image}" 
              alt="${article.title || 'Article Image'}" 
-             class="w-full h-56 md:h-64 lg:h-72 object-cover rounded-lg my-2 shadow-md transition-transform duration-500 ease-in-out transform hover:scale-105">
-    ` : ''}
+             class="w-full h-56 md:h-64 lg:h-72 object-cover rounded-lg">
+    </div>
+` : ''}
 
     <!-- Title Section -->
    <h4 class="font-semibold text-lg sm:text-xl text-gray-800 my-2 hover:text-black transition-colors duration-200 ease-in-out">
@@ -341,20 +395,21 @@ function displayArticles(articleList) {
 </h4>
 
 
-    <!-- Category Section -->
-    <p class="text-sm text-gray-500 mb-1">${article.category || 'Uncategorized'}</p>
+  <!-- Action Section (Read More & Share) -->
+<div class="flex justify-between items-center mt-1">
+    <a href="reading.html?id=${encodedId}" 
+       class="text-blue-500 hover:text-blue-700 text-sm sm:text-base font-medium transition-colors duration-200 ease-in-out">
+       Read more
+    </a>
+    <a href="#" onclick="shareArticle('${article.title}', location.href)" 
+       class="text-gray-600 hover:text-gray-900 text-xl">
+        <i class="fas fa-share-alt"></i>
+    </a>
+</div>
 
-    <!-- Action Section (Read More & Share) -->
-    <div class="flex justify-between items-center mt-1">
-        <a href="reading.html?id=${encodedId}" 
-           class="text-blue-500 hover:text-blue-700 text-sm sm:text-base font-medium transition-colors duration-200 ease-in-out">
-           Read more
-        </a>
-        <a href="#" onclick="shareArticle('${article.title}', location.href)" 
-           class="text-gray-600 hover:text-gray-900 text-xl">
-            <i class="fas fa-share-alt"></i>
-        </a>
-    </div>
+<!-- Category Section -->
+<p class="text-sm text-gray-500 mt-1">${article.category || 'Uncategorized'}</p>
+
 </div>
 
       </div>`;

@@ -5,13 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reading Page</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+      <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body class="bg-gray-50 text-gray-800 font-sans">
-    <!-- Header -->
-    <header class="bg-red-600 text-white py-4 px-6">
-        <h1 class="text-2xl font-bold">Hot News</h1>
-    </header>
+   <!-- Header -->
+<header class="bg-gray-900 text-gray-100 p-4 sticky top-0 z-50 shadow-md">
+  <div class="container mx-auto flex justify-between items-center">
+    
+    <!-- Logo and Brand -->
+    <div class="flex items-center space-x-2">
+      <img src="images/hot_logo.webp" alt="Hot News Logo" class="h-10 w-auto">
+      <span class="text-2xl md:text-3xl tracking-wider hover:text-red-500 transition-all cursor-pointer">
+        Bright Facts
+      </span>
+
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="hidden md:block">
+      <ul class="flex space-x-6 text-sm font-medium">
+        <li><a href="#" class="hover:text-red-500 transition-all">Home</a></li>
+        <li><a href="#articles" class="hover:text-red-500 transition-all">Articles</a></li>
+        <li><a href="#about" class="hover:text-red-500 transition-all">About</a></li>
+        <li><a href="#topics" class="hover:text-red-500 transition-all">Topics</a></li>
+      </ul>
+    </nav>
+    
+    <!-- Mobile Menu Button -->
+    <button id="menu-toggle" class="md:hidden p-2 rounded text-gray-400 hover:text-red-500 focus:outline-none">
+      <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </div>
+  
+  <!-- Mobile Navigation -->
+  <div id="mobile-menu" class="hidden md:hidden mt-4">
+    <ul class="space-y-2 text-sm font-medium">
+      <li><a href="#" class="block hover:text-red-500 transition-all">Home</a></li>
+      <li><a href="#articles" class="block hover:text-red-500 transition-all">Articles</a></li>
+      <li><a href="#about" class="block hover:text-red-500 transition-all">About</a></li>
+      <li><a href="#topics" class="block hover:text-red-500 transition-all">Topics</a></li>
+    </ul>
+  </div>
+</header>
+
 
     <!-- Main Content -->
     <div class="container mx-auto p-4 grid grid-cols-1 md:grid-cols-12 gap-6">
@@ -47,6 +87,87 @@
 
     <input type="hidden" id="encoded-content" value="EncodedContentHere">
 
+ <!-- Footer -->
+<footer class="bg-gray-900 text-gray-300 py-10">
+  <div class="container mx-auto px-4">
+    
+    <!-- Top Section: Newsletter and Socials -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Newsletter -->
+      <div>
+        <h3 class="text-xl font-bold mb-3">Subscribe for Timeless Insights</h3>
+        <p class="text-sm mb-4">Get curated evergreen content delivered directly to your inbox.</p>
+        <form class="flex">
+          <input type="email" placeholder="Enter your email" 
+                 class="w-full p-3 rounded-l-md bg-gray-800 border border-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500"
+                 required>
+          <button type="submit"
+                  class="bg-red-600 text-white px-4 py-3 rounded-r-md hover:bg-red-500 transition-all">Subscribe</button>
+        </form>
+      </div>
+      
+      <!-- Social Media Links -->
+      <div>
+        <h3 class="text-xl font-bold mb-3">Follow Us</h3>
+        <p class="text-sm mb-4">Join our community for more updates and timeless knowledge.</p>
+        <div class="flex space-x-6">
+          <a href="#" aria-label="Facebook" class="hover:text-blue-500 transition-all"><i class="fab fa-facebook-f fa-lg"></i></a>
+          <a href="#" aria-label="Twitter" class="hover:text-blue-400 transition-all"><i class="fab fa-twitter fa-lg"></i></a>
+          <a href="#" aria-label="LinkedIn" class="hover:text-blue-600 transition-all"><i class="fab fa-linkedin fa-lg"></i></a>
+          <a href="#" aria-label="YouTube" class="hover:text-red-500 transition-all"><i class="fab fa-youtube fa-lg"></i></a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Middle Section: Navigation and Popular Categories -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
+      <!-- Quick Links -->
+      <div>
+        <h4 class="text-lg font-semibold mb-3">Quick Links</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-gray-400 transition-all">Privacy Policy</a></li>
+          <li><a href="#" class="hover:text-gray-400 transition-all">Terms of Service</a></li>
+          <li><a href="#" class="hover:text-gray-400 transition-all">Contact Us</a></li>
+        </ul>
+      </div>
+      
+      <!-- Popular Evergreen Topics -->
+      <div>
+        <h4 class="text-lg font-semibold mb-3">Popular Topics</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-gray-400 transition-all">Timeless Tips</a></li>
+          <li><a href="#" class="hover:text-gray-400 transition-all">Success Stories</a></li>
+          <li><a href="#" class="hover:text-gray-400 transition-all">Financial Wisdom</a></li>
+        </ul>
+      </div>
+      
+      <!-- Featured Collections -->
+      <div>
+        <h4 class="text-lg font-semibold mb-3">Featured Collections</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-gray-400 transition-all">Life Lessons</a></li>
+          <li><a href="#" class="hover:text-gray-400 transition-all">Productivity Hacks</a></li>
+          <li><a href="#" class="hover:text-gray-400 transition-all">Business Foundations</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom Section: Search and Copyright -->
+    <div class="mt-12 border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center">
+      <div class="mb-4 md:mb-0">
+        <h4 class="text-lg font-semibold">Explore More</h4>
+        <form class="flex mt-2">
+          <input type="text" placeholder="Search timeless content..." 
+                 class="p-2 rounded-l-md w-64 bg-gray-800 border border-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500">
+          <button type="submit" class="bg-red-600 text-white px-4 rounded-r-md hover:bg-red-500 transition-all">Search</button>
+        </form>
+      </div>
+      
+      <p class="text-sm">&copy; 2024 Evergreen Articles. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
@@ -69,6 +190,11 @@
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
         }
+        document.getElementById('menu-toggle').addEventListener('click', () => {
+  const menu = document.getElementById('mobile-menu');
+  menu.classList.toggle('hidden');
+});
+
 
         function loadArticle() {
     const id = getUrlParameter('id');
