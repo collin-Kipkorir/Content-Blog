@@ -8,6 +8,19 @@
       <!-- Font Awesome CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+<style>
+     button.text-blue-600 {
+        font-size: 14px;
+    }
+  @media (max-width: 640px) {
+    #comment-form input, #comment-form textarea {
+      font-size: 14px;
+    }
+    #comment-form button {
+      font-size: 14px;
+    }
+  }
+</style>
 
 <body class="bg-gray-50 text-gray-800 font-sans">
    <!-- Header -->
@@ -71,6 +84,27 @@
             <h2 id="article-title" class="text-xl md:text-3xl font-bold mb-4"></h2>
             <div id="article-image" class="my-4 rounded-lg overflow-hidden"></div>
             <div id="article-content" class="space-y-4 text-justify leading-relaxed"></div>
+            <form id="comment-form" class="space-y-4 p-4 bg-white shadow-lg rounded-lg">
+              <label for="commenter-name" class="block text-sm font-semibold text-gray-700">Name</label>
+              <input id="commenter-name" type="text" placeholder="Name" 
+                     class="w-full p-3 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 sm:text-base text-sm" 
+                     required />
+          
+              <label for="comment-input" class="block text-sm font-semibold text-gray-700">Comment</label>
+              <textarea id="comment-input" placeholder="Add a comment..." 
+                        class="w-full p-3 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 sm:text-base text-sm" 
+                        required></textarea>
+          
+              <button type="submit" 
+                      class="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 transition duration-200 sm:text-base text-sm">
+                  Post Comment
+              </button>
+              <div id="comments-list">
+                <!-- Comments will be loaded here -->
+            </div>
+          </form>
+          
+          
         </div>
 
         <aside class="md:col-span-12 lg:col-span-3">
@@ -83,6 +117,7 @@
                 <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">Subscribe</button>
             </form>
         </aside>
+
     </div>
 
     <input type="hidden" id="encoded-content" value="EncodedContentHere">
@@ -170,8 +205,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
-    
+        import { getDatabase, ref,push, onValue } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+     
         const firebaseConfig = {
             apiKey: "AIzaSyDv6Xp4ZYnF4wuAEvSFOez_Gluus3hrlIE",
             authDomain: "content-blog-3ba6d.firebaseapp.com",
@@ -199,8 +234,8 @@
         function loadArticle() {
     const id = getUrlParameter('id');
     if (!id) {
-        document.getElementById('article-title').innerText = 'Article Not Found';
-        document.getElementById('breadcrumb-title').innerText = 'Article Not Found'; // Set breadcrumb to 'Not Found'
+        document.getElementById('article-title').innerText = 'Loading...';
+        document.getElementById('breadcrumb-title').innerText = 'Loading...'; // Set breadcrumb to 'Not Found'
         return;
     }
 
@@ -244,8 +279,8 @@
             // Add main content after media
             contentContainer.innerHTML += `<div>${foundArticle.content}</div>`;
         } else {
-            document.getElementById('article-title').innerText = 'Article Not Found';
-            document.getElementById('breadcrumb-title').innerText = 'Article Not Found'; // Set breadcrumb to 'Not Found'
+            document.getElementById('article-title').innerText = 'Loading...';
+            document.getElementById('breadcrumb-title').innerText = 'Loading...'; // Set breadcrumb to 'Not Found'
             document.getElementById('article-content').innerHTML = 'Content Not Available';
         }
     }, (error) => {
@@ -301,6 +336,86 @@
             alert(`Subscribed with email: ${email}`);
             this.reset();
         });
+        function loadComments(articleId) {
+    const commentsRef = ref(database, `comments/${articleId}`);
+    onValue(commentsRef, (snapshot) => {
+        const commentsList = document.getElementById('comments-list');
+        commentsList.innerHTML = '';  // Clear previous comments
+
+        let commentsArray = [];
+        snapshot.forEach((childSnapshot) => {
+            commentsArray.push(childSnapshot.val());
+        });
+
+        // Limit comments to 3 by default
+        const maxVisibleComments = 3;
+        const initialComments = commentsArray.slice(0, maxVisibleComments);
+
+        initialComments.forEach(commentData => {
+            commentsList.appendChild(createCommentElement(commentData));
+        });
+
+        // Add 'View More' button if there are more comments
+        if (commentsArray.length > maxVisibleComments) {
+            const viewMoreButton = document.createElement('button');
+            viewMoreButton.textContent = 'View More Comments';
+            viewMoreButton.className = 'mt-2 text-blue-600 hover:underline';
+            viewMoreButton.addEventListener('click', () => {
+                commentsList.innerHTML = '';  // Clear and reload all comments
+                commentsArray.forEach(commentData => {
+                    commentsList.appendChild(createCommentElement(commentData));
+                });
+                viewMoreButton.remove();  // Remove the button after expanding
+            });
+            commentsList.appendChild(viewMoreButton);
+        }
+    });
+}
+
+// Helper function to create a comment element
+function createCommentElement(commentData) {
+    const commentDiv = document.createElement('div');
+    commentDiv.classList.add('p-4', 'border', 'rounded-lg', 'bg-gray-100', 'mb-2');
+    commentDiv.innerHTML = `
+        <p class="font-bold">${commentData.name}</p>
+        <p class="text-sm text-gray-500">${new Date(commentData.timestamp).toLocaleString()}</p>
+        <p class="mt-1">${commentData.content}</p>
+    `;
+    return commentDiv;
+}
+
+
+document.getElementById('comment-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nameInput = document.getElementById('commenter-name');
+    const commentInput = document.getElementById('comment-input');
+    const name = nameInput.value.trim();
+    const content = commentInput.value.trim();
+    const articleId = getUrlParameter('id');
+
+    if (name && content && articleId) {
+        const commentsRef = ref(database, `comments/${articleId}`);
+        push(commentsRef, {
+            name: name,
+            content: content,
+            timestamp: Date.now()
+        }).then(() => {
+            nameInput.value = '';  // Clear the name input field
+            commentInput.value = '';  // Clear the comment input field
+        }).catch((error) => {
+            console.error('Error posting comment:', error);
+        });
+    }
+});
+
+
+// Load comments when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    const articleId = getUrlParameter('id');
+    if (articleId) {
+        loadComments(articleId);
+    }
+});
     </script>
     
 </body>
