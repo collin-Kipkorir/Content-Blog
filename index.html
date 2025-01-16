@@ -175,7 +175,7 @@
       <!-- Sidebar -->
       <aside class="hidden md:block w-full md:w-1/5 lg:w-1/5 mx-auto">
         <div class="bg-white rounded-lg shadow-lg">
-          <h3 class="text-lg font-bold bg-red-600 text-white p-3 rounded-t-lg">Recent</h3>
+          <h3 class="text-lg font-bold bg-red-600 text-white p-1 rounded-t-lg">Recent</h3>
           <ul id="latest-news" class="mt-2 space-y-2 text-gray-700">
             <!-- Trending news items will be dynamically inserted here -->
           </ul>
@@ -309,35 +309,46 @@
   const menu = document.getElementById('mobile-menu');
   menu.classList.toggle('hidden');
 });
-
-    function fetchTrendingNews() {
-      const trendingNewsRef = ref(database, 'trending-news');
-      onValue(trendingNewsRef, (snapshot) => {
+function fetchTrendingNews() {
+    const trendingNewsRef = ref(database, 'trending-news');
+    onValue(trendingNewsRef, (snapshot) => {
         const trendingNews = snapshot.val();
         const trendingNewsList = document.getElementById('trending-news');
-        trendingNewsList.innerHTML = ''; // Clear existing items
-        if (trendingNews) {
-          Object.keys(trendingNews).forEach((id) => {
-            const news = trendingNews[id];
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `
-            <div class="border-b pb-2 flex">
-              <img src="${news.image}" alt="${news.title}" class="w-16 h-16 object-cover rounded">
-              <div class="ml-2 flex-1">
-               <h4 class="font-bold line-clamp-2">
-  <a href="${news.url || '#'}">${news.title}</a>
-</h4>
+        trendingNewsList.innerHTML = '';  // Clear existing content
 
-                <p class="text-xs text-gray-500">${new Date(news.timestamp).toLocaleString()}</p>
-              </div>
-            </div>`;
-            trendingNewsList.appendChild(listItem);
-          });
+        if (trendingNews) {
+            console.log("Trending News Data Fetched:", trendingNews);  // Log fetched data
+            for (let id in trendingNews) {
+                const newsItem = trendingNews[id];
+                console.log("Processing News Item ID:", id, "Data:", newsItem);  // Log each news item
+
+                const timestamp = new Date(newsItem.timestamp).toLocaleString();
+                const encodedId = encodeURIComponent(id);  // Encode ID safely
+                const image = newsItem.image ? `<img src="${newsItem.image}" alt="${newsItem.title}" class="w-16 h-16 object-cover rounded">` : '';
+                
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <div class="border-b pb-2 mb-2 flex items-start">
+                        ${image}
+                        <div class="ml-4 flex-1">
+                            <a href="reading.html?id=${encodedId}" class="font-bold text-red-600 hover:underline">${newsItem.title}</a>
+                            <p class="text-sm text-gray-500">${timestamp}</p>
+                        </div>
+                    </div>
+                `;
+                console.log("Generated List Item:", listItem.innerHTML);  // Log generated list item HTML
+                trendingNewsList.appendChild(listItem);
+            }
         } else {
-          trendingNewsList.innerHTML = '<li>No trending news available.</li>';
+            console.warn("No trending news available.");
+            trendingNewsList.innerHTML = '<li>No trending news available.</li>';
         }
-      }, console.error);
-    }
+    }, (error) => {
+        console.error("Error fetching trending news: ", error);
+    });
+}
+
+
     function fetchArticles() {
   const articlesRef = ref(database, 'articles');
   onValue(articlesRef, (snapshot) => {

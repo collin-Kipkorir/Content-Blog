@@ -108,7 +108,7 @@
         </div>
 
         <aside class="md:col-span-12 lg:col-span-3">
-            <h3 class="text-lg font-bold mb-3">Trending News</h3>
+            <h3 class="text-lg font-bold mb-3">Popular</h3>
             <ul id="trending-news" class="space-y-3"></ul>
 
             <h3 class="text-lg font-bold mt-6 mb-3">Subscribe</h3>
@@ -121,6 +121,16 @@
     </div>
 
     <input type="hidden" id="encoded-content" value="EncodedContentHere">
+<!-- HTML structure for displaying messages -->
+<div id="message-container" class="hidden">
+  <p id="message-text" class="font-bold"></p>
+</div>
+
+<!-- Subscription form -->
+<form id="subscription-form">
+  <input type="email" placeholder="Enter your email" required>
+  <button type="submit">Subscribe</button>
+</form>
 
  <!-- Footer -->
 <footer class="bg-gray-900 text-gray-300 py-10">
@@ -132,7 +142,7 @@
       <div>
         <h3 class="text-xl font-bold mb-3">Subscribe for Timeless Insights</h3>
         <p class="text-sm mb-4">Get curated evergreen content delivered directly to your inbox.</p>
-        <form class="flex">
+        <form id="subscription-form"" class="flex">
           <input type="email" placeholder="Enter your email" 
                  class="w-full p-3 rounded-l-md bg-gray-800 border border-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500"
                  required>
@@ -198,225 +208,333 @@
         </form>
       </div>
       
-      <p class="text-sm">&copy; 2024 Evergreen Articles. All Rights Reserved.</p>
+      <p class="text-sm">&copy; 2024 Bright Facts Articles. All Rights Reserved.</p>
     </div>
   </div>
 </footer>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
-        import { getDatabase, ref,push, onValue } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
-     
-        const firebaseConfig = {
-            apiKey: "AIzaSyDv6Xp4ZYnF4wuAEvSFOez_Gluus3hrlIE",
-            authDomain: "content-blog-3ba6d.firebaseapp.com",
-            databaseURL: "https://content-blog-3ba6d-default-rtdb.firebaseio.com/",
-            projectId: "content-blog-3ba6d",
-            storageBucket: "content-blog-3ba6d.appspot.com",
-            messagingSenderId: "687597872642",
-            appId: "1:687597872642:web:79d50fb69ed451e020e91b",
-            measurementId: "G-YM6PNBB100"
-        };
-    
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-       // Function to get URL parameters
-       function getUrlParameter(name) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
-        }
-        document.getElementById('menu-toggle').addEventListener('click', () => {
-  const menu = document.getElementById('mobile-menu');
-  menu.classList.toggle('hidden');
-});
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+  import { getDatabase, ref, push, onValue,get, set } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
 
+  const firebaseConfig = {
+      apiKey: "AIzaSyDv6Xp4ZYnF4wuAEvSFOez_Gluus3hrlIE",
+      authDomain: "content-blog-3ba6d.firebaseapp.com",
+      databaseURL: "https://content-blog-3ba6d-default-rtdb.firebaseio.com/",
+      projectId: "content-blog-3ba6d",
+      storageBucket: "content-blog-3ba6d.appspot.com",
+      messagingSenderId: "687597872642",
+      appId: "1:687597872642:web:79d50fb69ed451e020e91b",
+      measurementId: "G-YM6PNBB100"
+  };
 
-        function loadArticle() {
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  // Utility to get URL parameters
+  function getUrlParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+  }
+
+  // Toggle mobile menu
+  document.getElementById('menu-toggle').addEventListener('click', () => {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+  });
+
+  function loadArticle() {
     const id = getUrlParameter('id');
     if (!id) {
-        document.getElementById('article-title').innerText = 'Loading...';
-        document.getElementById('breadcrumb-title').innerText = 'Loading...'; // Set breadcrumb to 'Not Found'
+        document.getElementById('article-title').innerText = 'Content Not Available';
+        document.getElementById('breadcrumb-title').innerText = 'Content Not Available';
         return;
     }
 
+    // Define references for articles and trending news
     const articlesRef = ref(database, `articles/${id}`);
+    const trendingNewsRef = ref(database, `trending-news/${id}`);
+
+    // First try fetching from articles
     onValue(articlesRef, (snapshot) => {
         const foundArticle = snapshot.val();
-
         if (foundArticle) {
-            // Update article title and breadcrumb
-            document.getElementById('article-title').innerText = foundArticle.title;
-            document.getElementById('breadcrumb-title').innerText = foundArticle.title;
-            document.getElementById('breadcrumb-title').style.color = 'lightgrey'; // Set breadcrumb color to light grey
-
-            // Clear the article-content container before adding new elements
-            const contentContainer = document.getElementById('article-content');
-            contentContainer.innerHTML = ''; 
-
-            // Add media content (image or video) below the title
-            if (foundArticle.image) {
-                contentContainer.innerHTML += `<img src="${foundArticle.image}" alt="${foundArticle.title}" class="w-full h-auto my-4">`;
-            }
-            if (foundArticle.video) {
-    // Check if the video URL is a YouTube URL
-    let videoUrl = foundArticle.video;
-    if (videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be")) {
-        // Replace to embed format
-        videoUrl = videoUrl.replace("youtube.com/watch?v=", "youtube.com/embed/").replace("youtu.be/", "youtube.com/embed/");
-    }
-
-    // Add iframe only if it's a valid YouTube embed link
-    if (videoUrl.includes("youtube.com/embed/")) {
-        contentContainer.innerHTML += `
-            <iframe src="${videoUrl}" class="w-full h-64 my-4" frameborder="0" allowfullscreen></iframe>
-        `;
-    } else {
-        contentContainer.innerHTML += `<p>Invalid video URL</p>`;
-    }
+            displayArticle(foundArticle);
+        } else {
+            // If no article is found, try fetching from trending news
+            onValue(trendingNewsRef, (snapshot) => {
+                const foundTrendingNews = snapshot.val();
+                if (foundTrendingNews) {
+                    displayArticle(foundTrendingNews);
+                } else {
+                    displayNotFound();
+                }
+            }, handleError);
+        }
+    }, handleError);
 }
 
+// Helper to display the content
+function displayArticle(article) {
+    document.getElementById('article-title').innerText = article.title;
+    document.getElementById('breadcrumb-title').innerText = article.title;
+    document.getElementById('breadcrumb-title').style.color = 'lightgrey';
 
-            // Add main content after media
-            contentContainer.innerHTML += `<div>${foundArticle.content}</div>`;
+    const contentContainer = document.getElementById('article-content');
+    contentContainer.innerHTML = '';
+
+    if (article.image) {
+        contentContainer.innerHTML += `<img src="${article.image}" alt="${article.title}" class="w-full h-auto my-4">`;
+    }
+    if (article.video) {
+        let videoUrl = article.video.trim();
+        if (videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be")) {
+            videoUrl = videoUrl.replace("youtube.com/watch?v=", "youtube.com/embed/").replace("youtu.be/", "youtube.com/embed/");
+        }
+        if (videoUrl.includes("youtube.com/embed/")) {
+            contentContainer.innerHTML += `<iframe src="${videoUrl}" class="w-full h-64 my-4" frameborder="0" allowfullscreen></iframe>`;
         } else {
-            document.getElementById('article-title').innerText = 'Loading...';
-            document.getElementById('breadcrumb-title').innerText = 'Loading...'; // Set breadcrumb to 'Not Found'
-            document.getElementById('article-content').innerHTML = 'Content Not Available';
+            contentContainer.innerHTML += `<p>Invalid or unsupported video URL.</p>`;
+        }
+    }
+    contentContainer.innerHTML += `<div>${article.content}</div>`;
+}
+
+// Helper to display "not found" content
+function displayNotFound() {
+    document.getElementById('article-title').innerText = 'Content Not Available';
+    document.getElementById('breadcrumb-title').innerText = 'Content Not Available';
+    document.getElementById('article-content').innerHTML = 'Content Not Available';
+}
+
+// Error handler
+function handleError(error) {
+    console.error("Error fetching article:", error);
+}
+// Function to fetch trending news
+function fetchTrendingNews() {
+    const trendingNewsRef = ref(database, 'trending-news');
+    
+    // Fetch trending news from Firebase
+    onValue(trendingNewsRef, (snapshot) => {
+        const trendingNews = snapshot.val();
+        const trendingNewsList = document.getElementById('trending-news');
+        trendingNewsList.innerHTML = '';  // Clear existing content
+
+        if (trendingNews) {
+            // Convert the object to an array
+            const newsArray = Object.values(trendingNews);
+
+            // Shuffle the array
+            shuffleArray(newsArray);
+
+            // Loop through the shuffled array
+            newsArray.forEach((newsItem) => {
+                console.log(newsItem);  // Debug log
+
+                // Skip if the article is a preview
+                if (newsItem.preview && newsItem.preview === true) {
+                    console.log(`Skipping preview article: ${newsItem.title}`);
+                    return; // Skip this news item
+                }
+
+                const timestamp = new Date(newsItem.timestamp).toLocaleString();
+                const encodedId = encodeURIComponent(newsItem.id);  // Encode ID safely
+                const image = newsItem.image ? `<img src="${newsItem.image}" alt="${newsItem.title}" class="w-16 h-16 object-cover rounded">` : '';
+
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <div class="border-b pb-2 mb-2 flex items-start">
+                        ${image}
+                        <div class="ml-4 flex-1">
+                            <a href="reading.html?id=${encodedId}" class="font-bold text-red-600 hover:underline">${newsItem.title}</a>
+                            <p class="text-sm text-gray-500">${timestamp}</p>
+                        </div>
+                    </div>
+                `;
+                trendingNewsList.appendChild(listItem);
+            });
+        } else {
+            trendingNewsList.innerHTML = '<li>No trending news available.</li>';
         }
     }, (error) => {
-        console.error("Error fetching article: ", error);
+        console.error("Error fetching trending news: ", error);
     });
 }
 
-
-        // Load data on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            loadArticle();
-        });
-        function fetchTrendingNews() {
-            const trendingNewsRef = ref(database, 'trending-news');
-            onValue(trendingNewsRef, (snapshot) => {
-                const trendingNews = snapshot.val();
-                const trendingNewsList = document.getElementById('trending-news');
-                trendingNewsList.innerHTML = '';
-    
-                if (trendingNews) {
-                    for (let id in trendingNews) {
-                        const newsItem = trendingNews[id];
-                        const timestamp = new Date(newsItem.timestamp).toLocaleString();
-                        const listItem = document.createElement('li');
-                        const image = newsItem.image ? `<img src="${newsItem.image}" alt="${newsItem.title}" class="w-16 h-16 object-cover rounded">` : '';
-                        listItem.innerHTML = `
-                            <div class="border-b pb-2 mb-2 flex items-start">
-                                ${image}
-                                <div class="ml-4 flex-1">
-                                    <a href="${newsItem.url || '#'}" class="font-bold text-red-600 hover:underline">${newsItem.title}</a>
-                                    <p class="text-sm text-gray-500">${timestamp}</p>
-                                </div>
-                            </div>
-                        `;
-                        trendingNewsList.appendChild(listItem);
-                    }
-                } else {
-                    trendingNewsList.innerHTML = '<li>No trending news available.</li>';
-                }
-            }, (error) => {
-                console.error("Error fetching trending news: ", error);
-            });
-        }
-    
-        document.addEventListener('DOMContentLoaded', () => {
-            loadArticle();
-            fetchTrendingNews();
-        });
-    
-        document.getElementById('subscription-form').addEventListener('submit', function (event) {
-            event.preventDefault();
-            const email = this.querySelector('input[type="email"]').value;
-            alert(`Subscribed with email: ${email}`);
-            this.reset();
-        });
-        function loadComments(articleId) {
-    const commentsRef = ref(database, `comments/${articleId}`);
-    onValue(commentsRef, (snapshot) => {
-        const commentsList = document.getElementById('comments-list');
-        commentsList.innerHTML = '';  // Clear previous comments
-
-        let commentsArray = [];
-        snapshot.forEach((childSnapshot) => {
-            commentsArray.push(childSnapshot.val());
-        });
-
-        // Limit comments to 3 by default
-        const maxVisibleComments = 3;
-        const initialComments = commentsArray.slice(0, maxVisibleComments);
-
-        initialComments.forEach(commentData => {
-            commentsList.appendChild(createCommentElement(commentData));
-        });
-
-        // Add 'View More' button if there are more comments
-        if (commentsArray.length > maxVisibleComments) {
-            const viewMoreButton = document.createElement('button');
-            viewMoreButton.textContent = 'View More Comments';
-            viewMoreButton.className = 'mt-2 text-blue-600 hover:underline';
-            viewMoreButton.addEventListener('click', () => {
-                commentsList.innerHTML = '';  // Clear and reload all comments
-                commentsArray.forEach(commentData => {
-                    commentsList.appendChild(createCommentElement(commentData));
-                });
-                viewMoreButton.remove();  // Remove the button after expanding
-            });
-            commentsList.appendChild(viewMoreButton);
-        }
-    });
-}
-
-// Helper function to create a comment element
-function createCommentElement(commentData) {
-    const commentDiv = document.createElement('div');
-    commentDiv.classList.add('p-4', 'border', 'rounded-lg', 'bg-gray-100', 'mb-2');
-    commentDiv.innerHTML = `
-        <p class="font-bold">${commentData.name}</p>
-        <p class="text-sm text-gray-500">${new Date(commentData.timestamp).toLocaleString()}</p>
-        <p class="mt-1">${commentData.content}</p>
-    `;
-    return commentDiv;
-}
-
-
-document.getElementById('comment-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const nameInput = document.getElementById('commenter-name');
-    const commentInput = document.getElementById('comment-input');
-    const name = nameInput.value.trim();
-    const content = commentInput.value.trim();
-    const articleId = getUrlParameter('id');
-
-    if (name && content && articleId) {
-        const commentsRef = ref(database, `comments/${articleId}`);
-        push(commentsRef, {
-            name: name,
-            content: content,
-            timestamp: Date.now()
-        }).then(() => {
-            nameInput.value = '';  // Clear the name input field
-            commentInput.value = '';  // Clear the comment input field
-        }).catch((error) => {
-            console.error('Error posting comment:', error);
-        });
+// Function to shuffle an array (Fisher-Yates shuffle)
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1)); // Get a random index
+        [array[i], array[j]] = [array[j], array[i]]; // Swap elements
     }
-});
+}
 
 
-// Load comments when the page loads
+// Load article and trending news on page load
 document.addEventListener('DOMContentLoaded', () => {
+    loadArticle();  // Function to load article (already defined in your code)
+    fetchTrendingNews();  // Call the function to fetch trending news
     const articleId = getUrlParameter('id');
     if (articleId) {
-        loadComments(articleId);
+        loadComments(articleId);  // Function to load comments (already defined in your code)
     }
 });
-    </script>
+
+  // Load and display comments for an article
+  function loadComments(articleId) {
+      const commentsRef = ref(database, `comments/${articleId}`);
+      onValue(commentsRef, (snapshot) => {
+          const commentsList = document.getElementById('comments-list');
+          commentsList.innerHTML = '';
+
+          let commentsArray = [];
+          snapshot.forEach((childSnapshot) => {
+              commentsArray.push(childSnapshot.val());
+          });
+
+          const maxVisibleComments = 3;
+          const initialComments = commentsArray.slice(0, maxVisibleComments);
+
+          initialComments.forEach(commentData => {
+              commentsList.appendChild(createCommentElement(commentData));
+          });
+
+          if (commentsArray.length > maxVisibleComments) {
+              const viewMoreButton = document.createElement('button');
+              viewMoreButton.textContent = 'View More Comments';
+              viewMoreButton.className = 'mt-2 text-blue-600 hover:underline';
+              viewMoreButton.addEventListener('click', () => {
+                  commentsList.innerHTML = '';
+                  commentsArray.forEach(commentData => {
+                      commentsList.appendChild(createCommentElement(commentData));
+                  });
+                  viewMoreButton.remove();
+              });
+              commentsList.appendChild(viewMoreButton);
+          }
+      });
+  }
+
+  // Helper function to create a comment element
+  function createCommentElement(commentData) {
+      const commentDiv = document.createElement('div');
+      commentDiv.classList.add('p-4', 'border', 'rounded-lg', 'bg-gray-100', 'mb-2');
+      commentDiv.innerHTML = `
+          <p class="font-bold">${commentData.name}</p>
+          <p class="text-sm text-gray-500">${new Date(commentData.timestamp).toLocaleString()}</p>
+          <p class="mt-1">${commentData.content}</p>`;
+      return commentDiv;
+  }
+
+  // Post new comment
+  document.getElementById('comment-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nameInput = document.getElementById('commenter-name');
+      const commentInput = document.getElementById('comment-input');
+      const name = nameInput.value.trim();
+      const content = commentInput.value.trim();
+      const articleId = getUrlParameter('id');
+
+      if (name && content && articleId) {
+          const commentsRef = ref(database, `comments/${articleId}`);
+          push(commentsRef, {
+              name,
+              content,
+              timestamp: Date.now()
+          }).then(() => {
+              nameInput.value = '';
+              commentInput.value = '';
+          }).catch((error) => {
+              console.error('Error posting comment:', error);
+          });
+      }
+  });
+// Function to sanitize the email for Firebase path
+function sanitizeEmail(email) {
+    return email.replace(/@/g, '_at_').replace(/\./g, '_dot_');
+}
+// Subscription form handler
+document.getElementById('subscription-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const email = this.querySelector('input[type="email"]').value;
+
+    // Message container elements
+    const messageContainer = document.getElementById('message-container');
+    const messageText = document.getElementById('message-text');
+
+    // Clear any previous messages
+    messageContainer.classList.add('hidden');
+    messageText.textContent = '';
+
+    if (email) {
+        // Sanitize the email to make it safe for Firebase paths
+        const sanitizedEmail = sanitizeEmail(email);
+
+        // Get reference to the 'subscribers' node
+        const subscribersRef = ref(getDatabase(), 'subscribers'); // The 'subscribers' node
+
+        // Check if email already exists in the database
+        get(subscribersRef).then((snapshot) => {
+            let emailExists = false;
+            
+            if (snapshot.exists()) {
+                // Check if the email already exists under 'subscribers' node
+                const subscribers = snapshot.val();
+                for (let key in subscribers) {
+                    if (subscribers[key].email === email) {
+                        emailExists = true;
+                        break;
+                    }
+                }
+            }
+
+            if (emailExists) {
+                // Email already exists in the database
+                messageText.textContent = `The email address ${email} has already been subscribed.`;
+                messageText.classList.add('text-red-500');  // Error message
+                messageContainer.classList.remove('hidden');
+            } else {
+                // Email doesn't exist, so add it to the 'subscribers' node
+                const newSubscriberRef = push(subscribersRef); // Push creates a new unique key under 'subscribers'
+                set(newSubscriberRef, {
+                    email: email,
+                    timestamp: Date.now()
+                }).then(() => {
+                    messageText.textContent = `Successfully subscribed with email: ${email}`;
+                    messageText.classList.add('text-green-500');  // Success message
+                    messageContainer.classList.remove('hidden');
+                    this.reset();
+                }).catch((error) => {
+                    console.error('Error subscribing email: ', error);
+                    messageText.textContent = 'An error occurred while subscribing. Please try again later.';
+                    messageText.classList.add('text-red-500');  // Error message
+                    messageContainer.classList.remove('hidden');
+                });
+            }
+        }).catch((error) => {
+            console.error("Error checking email: ", error);
+            messageText.textContent = 'An error occurred while checking the email. Please try again later.';
+            messageText.classList.add('text-red-500');  // Error message
+            messageContainer.classList.remove('hidden');
+        });
+    } else {
+        messageText.textContent = 'Please enter a valid email address.';
+        messageText.classList.add('text-red-500');  // Error message
+        messageContainer.classList.remove('hidden');
+    }
+});
+  // Load article, comments, and trending news on page load
+  document.addEventListener('DOMContentLoaded', () => {
+      loadArticle();
+      fetchTrendingNews();
+      const articleId = getUrlParameter('id');
+      if (articleId) {
+          loadComments(articleId);
+      }
+  });
+</script>
+
     
 </body>
 </html>
